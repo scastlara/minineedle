@@ -3,4 +3,6 @@
 
 # Setuptools distribution folder.
 /dist/
-miniseq.egg-info/
+build/
+*.swp
+*.egg-info/

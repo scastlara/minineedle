@@ -44,21 +44,11 @@ for align in sorted([first_al, second_al], reverse=True):
 
 ```
 
-## Methods
-### align()
-Performs the alignment.
-
-### get_score()
-Returns the score of the alignment. It runs align() if it has not been done yet.
-
-### change_matrix(newmatrix)
-Takes a ScoreMatrix object and updates the matrix for the alignment. You still have to run it calling `align()`.
-
-### get identity()
-Returns the % of identity (rounded with 2 decimal points).
-
-### get_almatrix()
-Return the alignment matrix as a list of lists.
+## Install
+```bash
+git clone https://github.com/scastlara/minineedle.git
+sudo python3 setup.py install
+```
 
 
 ## Classes
@@ -82,3 +72,20 @@ With this class you can define your own score matrices. It has three attributes:
 - match
 - miss
 - gap
+
+
+## Methods
+### align()
+Performs the alignment.
+
+### get_score()
+Returns the score of the alignment. It runs align() if it has not been done yet.
+
+### change_matrix(newmatrix)
+Takes a ScoreMatrix object and updates the matrix for the alignment. You still have to run it calling `align()`.
+
+### get identity()
+Returns the % of identity (rounded with 2 decimal points).
+
+### get_almatrix()
+Return the alignment matrix as a list of lists.
