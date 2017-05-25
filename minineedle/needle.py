@@ -10,8 +10,8 @@ class Needleman(object):
         self.alseq1   = list()
         self.alseq2   = list()
         self.smatrix  = ScoreMatrix(match=1, miss=-1, gap=-1)
-        self.score    = int()
-        self.identity = float()
+        self.__score    = int()
+        self.__identity = float()
         self.__nmatrix  = [ [ 0 for x in range(len(self.seq1) + 1)] for x in range(len(self.seq2) +1)]
         self.__pmatrix  = [ [ None for x in range(len(self.seq1) + 1)] for x in range(len(self.seq2) +1)]
 
@@ -43,7 +43,7 @@ class Needleman(object):
     def get_score(self):
         if not self.alseq1:
             self.align()
-        return self.score
+        return self.__score
 
     def change_matrix(self, newmatrix):
         if isinstance(newmatrix, ScoreMatrix):
@@ -74,7 +74,7 @@ class Needleman(object):
         # Get score and alignment
         imax = len(self.__nmatrix) - 1
         jmax = len(self.__nmatrix[0]) -1
-        self.score = self.__nmatrix[imax][jmax]
+        self.__score = self.__nmatrix[imax][jmax]
         self.__get_alignment(imax, jmax)
 
     def get_almatrix(self):
@@ -84,6 +84,14 @@ class Needleman(object):
         if not self.alseq1:
             self.align()
         return self.__nmatrix
+
+    def get_identity(self):
+        """
+        Returns the % of identity of the alignment
+        """
+        if not self.alseq1:
+            self.align()
+        return round(self.__identity, 2) # Two decimal points
 
     def __fill_matrices(self):
         for irow in range(0, len(self.seq2)):
@@ -109,6 +117,8 @@ class Needleman(object):
             if self.__pmatrix[irow][jcol] == "diag":
                 alseq1.append(self.seq1.get_sequence()[jcol - 1])
                 alseq2.append(self.seq2.get_sequence()[irow - 1])
+                if self.seq1.get_sequence()[jcol - 1] == self.seq2.get_sequence()[irow - 1]:
+                    self.__identity += 1
                 irow -= 1
                 jcol -= 1
             elif self.__pmatrix[irow][jcol] == "up":
@@ -123,6 +133,7 @@ class Needleman(object):
                 break
         self.alseq1 = list(reversed(alseq1))
         self.alseq2 = list(reversed(alseq2))
+        self.__identity = (self.__identity / len(self.alseq1)) * 100
         return
 
     def __check_best(self, diagscore, topscore, leftscore, irow, jcol):
