@@ -54,6 +54,13 @@ Returns the score of the alignment. It runs align() if it has not been done yet.
 ### change_matrix(newmatrix)
 Takes a ScoreMatrix object and updates the matrix for the alignment. You still have to run it calling `align()`.
 
+### get identity()
+Returns the % of identity (rounded with 2 decimal points).
+
+### get_almatrix()
+Return the alignment matrix as a list of lists.
+
+
 ## Classes
 
 ### Needleman
