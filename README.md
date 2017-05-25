@@ -1,5 +1,5 @@
 # minineedle
-Needleman Wunsch algorithm in python using miniseq objects
+Needleman Wunsch algorithm in python using [miniseq](https://github.com/scastlara/miniseq) objects
 
 ## Version
 v0.1.0
