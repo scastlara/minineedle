@@ -1,4 +1,5 @@
 <img width="250" src="https://github.com/scastlara/minineedle/blob/master/minineedle/logo.png"/>
+
 Needleman Wunsch algorithm in python using [miniseq](https://github.com/scastlara/miniseq) objects
 
 ## Version
