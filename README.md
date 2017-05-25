@@ -15,7 +15,6 @@ import minineedle
 fasta = miniseq.FASTA(filename="myfasta.fa")
 seq1, seq2 = fasta[0], fasta[1]
 
-fasta
 # Create the instance
 alignment = minineedle.Needleman(seq1, seq2)
 
