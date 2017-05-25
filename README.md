@@ -13,7 +13,7 @@ import minineedle
 
 # Load sequences as miniseq FASTA object
 fasta = miniseq.FASTA(filename="myfasta.fa")
-seq1, seq2 = fasta.sequences
+seq1, seq2 = fasta[0], fasta[1]
 
 fasta
 # Create the instance
