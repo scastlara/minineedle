@@ -1,6 +1,6 @@
 from setuptools import setup
 
-setup(name='miniseq',
+setup(name='minineedle',
       version='0.2',
       description='Minimal needleman-wunsch',
       url='http://github.com/scastlara/minineedle',
