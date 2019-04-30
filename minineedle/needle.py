@@ -159,6 +159,14 @@ class ScoreMatrix(object):
         self.match = match
         self.miss  = miss
         self.gap   = gap
+
+        try:
+            assert(isinstance(self.match, int) is True)
+            assert(isinstance(self.miss, int) is True)
+            assert(isinstance(self.gap, int) is True)
+        except AssertionError:
+            raise ValueError("match, miss, and gap should be integers.")
+
     def __str__(self):
         print_str = "Match:%s Missmatch:%s Gap:%s" % (self.match, self.miss, self.gap)
         return print_str
