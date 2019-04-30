@@ -9,7 +9,7 @@ install:
   - pip install coveralls
 
 # command to run tests
-script: export PYTHONPATH=. && pytest --cov=minineedle/ tests/
+script: export PYTHONPATH=. && pytest --cov=minineedle/ tests/tests.py
 
 after_success:
 - coveralls
