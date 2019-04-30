@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/scastlara/minineedle.svg?branch=master)](https://travis-ci.org/scastlara/minineedle) [![Coverage Status](https://coveralls.io/repos/github/scastlara/minineedle/badge.svg?branch=master)](https://coveralls.io/github/scastlara/minineedle?branch=master) [![PyPI version](https://badge.fury.io/py/minineedle.svg)](https://badge.fury.io/py/minineedle)
+
 <img width="250" src="https://github.com/scastlara/minineedle/blob/master/minineedle/logo.png"/>
 
 Needleman Wunsch algorithm in python using [miniseq](https://github.com/scastlara/miniseq) objects
