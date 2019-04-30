@@ -3,7 +3,7 @@
 Needleman Wunsch algorithm in python using [miniseq](https://github.com/scastlara/miniseq) objects
 
 ## Version
-v0.1.0
+v1.0.0
 
 ## Algorithm
 <img src="https://upload.wikimedia.org/wikipedia/commons/3/3f/Needleman-Wunsch_pairwise_sequence_alignment.png" width="300px">
