@@ -12,8 +12,8 @@ class Needleman(object):
         self.smatrix  = ScoreMatrix(match=1, miss=-1, gap=-1)
         self.__score    = int()
         self.__identity = float()
-        self.__nmatrix  = [ [ 0 for x in range(len(self.seq1) + 1)] for x in range(len(self.seq2) +1)]
-        self.__pmatrix  = [ [ None for x in range(len(self.seq1) + 1)] for x in range(len(self.seq2) +1)]
+        self.__nmatrix  = self.__initialize_number_matrix()
+        self.__pmatrix  = self.__initialize_pointers_matrix()
 
         try:
             self.seq1.get_sequence()
@@ -44,15 +44,19 @@ class Needleman(object):
         if not self.alseq1:
             self.align()
         return self.__score
-
+    
     def change_matrix(self, newmatrix):
         if isinstance(newmatrix, ScoreMatrix):
             self.smatrix = newmatrix
         else:
             raise ValueError("New matrix should be a ScoreMatrix object.")
 
-    def align(self):
-        # Init results and pointers matrix
+
+    def __add_initial_pointers(self):
+        """
+        Fills the pointers matrix first row with "left" pointer and 
+        the initial column with "up" pointers.
+        """
         for row in self.__pmatrix:
             row[0] = "up"
 
@@ -61,20 +65,41 @@ class Needleman(object):
 
         self.__pmatrix[0][0] = None
 
-        # Add Gap penalties
+    def __add_gap_penalties(self):
+        """
+        Fills number matrix first row and first column with the gap penalties.
+        """
         for i in range(1, len(self.seq1) + 1 ):
             self.__nmatrix[0][i] = self.__nmatrix[0][i-1] + self.smatrix.gap
 
         for j in range(1, len(self.seq2) +1 ):
             self.__nmatrix[j][0] = self.__nmatrix[j-1][0] + self.smatrix.gap
 
-        # Iterate through the sequences and nmatrix
-        self.__fill_matrices()
-
-        # Get score and alignment
+    def __get_alignment_score(self, imax, jmax):
+        """
+        Stores the alignment score value in the __score attribute.
+        """
+        self.__score = self.__nmatrix[imax][jmax]
+    
+    def __get_last_cell_position(self):
+        """
+        Returns the cell row and column of the last cell in the matrix.
+        """
         imax = len(self.__nmatrix) - 1
         jmax = len(self.__nmatrix[0]) -1
-        self.__score = self.__nmatrix[imax][jmax]
+        return imax, jmax
+
+    def align(self):
+        """
+        Performs a Needleman-Wunsch alignment with the given sequences and the 
+        corresponding ScoreMatrix.
+        """
+        self.__add_initial_pointers()
+        self.__add_gap_penalties()
+        self.__fill_matrices()
+
+        imax, jmax = self.__get_last_cell_position()
+        self.__get_alignment_score(imax, jmax)
         self.__get_alignment(imax, jmax)
 
     def get_almatrix(self):
@@ -93,6 +118,18 @@ class Needleman(object):
             self.align()
         return round(self.__identity, 2) # Two decimal points
 
+    def __initialize_number_matrix(self):
+        """
+        Initializes the matrix where the computed scores are stored.
+        """
+        return [ [ 0 for x in range(len(self.seq1) + 1)] for x in range(len(self.seq2) +1)]
+
+    def __initialize_pointers_matrix(self):
+        """
+        Initializes the matrix where the "up", "down", "diag" pointers are stored.
+        """
+        return [ [ None for x in range(len(self.seq1) + 1)] for x in range(len(self.seq2) +1)]
+
     def __fill_matrices(self):
         for irow in range(0, len(self.seq2)):
             for jcol in range(0, len(self.seq1)):
@@ -105,8 +142,7 @@ class Needleman(object):
                 else:
                     diagscore += self.smatrix.miss
 
-                # Get best score
-                self.__check_best(diagscore, topscore, leftscore, irow, jcol)
+                self.__check_best_score(diagscore, topscore, leftscore, irow, jcol)
         return
 
     def __get_alignment(self, irow, jcol):
@@ -136,7 +172,7 @@ class Needleman(object):
         self.__identity = (self.__identity / len(self.alseq1)) * 100
         return
 
-    def __check_best(self, diagscore, topscore, leftscore, irow, jcol):
+    def __check_best_score(self, diagscore, topscore, leftscore, irow, jcol):
         best_pointer = str()
         best_score   = int()
         if diagscore >= topscore:
