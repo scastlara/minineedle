@@ -46,11 +46,45 @@ class Needleman(object):
         return self.__score
     
     def change_matrix(self, newmatrix):
+        """
+        Changes ScoreMatrix
+
+        Args:
+            newmatrix (ScoreMatrix): Matrix containing match, miss, and gap penalties.
+        """
         if isinstance(newmatrix, ScoreMatrix):
             self.smatrix = newmatrix
         else:
             raise ValueError("New matrix should be a ScoreMatrix object.")
 
+    def align(self):
+        """
+        Performs a Needleman-Wunsch alignment with the given sequences and the 
+        corresponding ScoreMatrix.
+        """
+        self.__add_initial_pointers()
+        self.__add_gap_penalties()
+        self.__fill_matrices()
+
+        imax, jmax = self.__get_last_cell_position()
+        self.__get_alignment_score(imax, jmax)
+        self.__trace_back_alignment(imax, jmax)
+
+    def get_almatrix(self):
+        """
+        Returns the alignment matrix (list of lists)
+        """
+        if not self.alseq1:
+            self.align()
+        return self.__nmatrix
+
+    def get_identity(self):
+        """
+        Returns the % of identity of the alignment
+        """
+        if not self.alseq1:
+            self.align()
+        return round(self.__identity, 2) # Two decimal points
 
     def __add_initial_pointers(self):
         """
@@ -89,35 +123,6 @@ class Needleman(object):
         jmax = len(self.__nmatrix[0]) -1
         return imax, jmax
 
-    def align(self):
-        """
-        Performs a Needleman-Wunsch alignment with the given sequences and the 
-        corresponding ScoreMatrix.
-        """
-        self.__add_initial_pointers()
-        self.__add_gap_penalties()
-        self.__fill_matrices()
-
-        imax, jmax = self.__get_last_cell_position()
-        self.__get_alignment_score(imax, jmax)
-        self.__get_alignment(imax, jmax)
-
-    def get_almatrix(self):
-        """
-        Returns the alignment matrix (list of lists)
-        """
-        if not self.alseq1:
-            self.align()
-        return self.__nmatrix
-
-    def get_identity(self):
-        """
-        Returns the % of identity of the alignment
-        """
-        if not self.alseq1:
-            self.align()
-        return round(self.__identity, 2) # Two decimal points
-
     def __initialize_number_matrix(self):
         """
         Initializes the matrix where the computed scores are stored.
@@ -145,7 +150,7 @@ class Needleman(object):
                 self.__check_best_score(diagscore, topscore, leftscore, irow, jcol)
         return
 
-    def __get_alignment(self, irow, jcol):
+    def __trace_back_alignment(self, irow, jcol):
         alseq1 = list()
         alseq2 = list()
 
