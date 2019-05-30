@@ -110,7 +110,6 @@ def test_pointer_matrix():
     ]
     assert(needle._Needleman__pmatrix == expected_matrix)
 
-
 def test_alignment():
     '''
     Checks if align method works
@@ -120,8 +119,8 @@ def test_alignment():
     needle = minineedle.Needleman(seq1, seq2)
     needle.change_matrix(minineedle.ScoreMatrix(1, -1, -1))
     needle.align()
-    assert(needle.alseq1 == ["G", "C", "A", "-", "T", "G", "C", "U"])
-    assert(needle.alseq2 == ["G", "-", "A", "T", "T", "A", "C", "A" ])
+    assert(needle._Needleman__alseq1 == ["G", "C", "A", "-", "T", "G", "C", "U"])
+    assert(needle._Needleman__alseq2 == ["G", "-", "A", "T", "T", "A", "C", "A" ])
 
 def test_alignment_score():
     '''
