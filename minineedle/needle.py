@@ -7,8 +7,8 @@ class Needleman(object):
     def __init__(self, seq1, seq2):
         self.seq1     = seq1
         self.seq2     = seq2
-        self.alseq1   = list()
-        self.alseq2   = list()
+        self.__alseq1   = list()
+        self.__alseq2   = list()
         self.smatrix  = ScoreMatrix(match=1, miss=-1, gap=-1)
         self.__score    = int()
         self.__identity = float()
@@ -26,12 +26,12 @@ class Needleman(object):
 
 
     def __str__(self):
-        if not self.alseq1:
+        if not self.__alseq1:
             self.align()
         return str("Alignment of %s and %s:\n\t%s\n\t%s\n" % (self.seq1.get_identifier(),
                                                               self.seq2.get_identifier(),
-                                                              "".join(self.alseq1),
-                                                              "".join(self.alseq2)
+                                                              "".join(self.__alseq1),
+                                                              "".join(self.__alseq2)
                                                               ))
 
     def __lt__(self, other):
@@ -41,7 +41,7 @@ class Needleman(object):
         return self.get_score() == other.get_score()
 
     def get_score(self):
-        if not self.alseq1:
+        if not self.__alseq1:
             self.align()
         return self.__score
     
@@ -74,7 +74,7 @@ class Needleman(object):
         """
         Returns the alignment matrix (list of lists)
         """
-        if not self.alseq1:
+        if not self.__alseq1:
             self.align()
         return self.__nmatrix
 
@@ -82,9 +82,23 @@ class Needleman(object):
         """
         Returns the % of identity of the alignment
         """
-        if not self.alseq1:
+        if not self.__alseq1:
             self.align()
         return round(self.__identity, 2) # Two decimal points
+
+    def get_aligned_sequences(self, sequence_format="list"):
+        """
+        Returns tuple with both aligned sequences as lists or as strings.
+        """
+        if sequence_format == "list":
+            seq_a = self.__alseq1
+            seq_b = self.__alseq2
+        elif sequence_format == "string" or sequence_format == "str":
+            seq_a = "".join(self.__alseq1)
+            seq_b = "".join(self.__alseq2)
+        else:
+            raise ValueError("Sequence_format has to be either 'list' or 'str'!")
+        return seq_a, seq_b
 
     def __add_initial_pointers(self):
         """
@@ -172,9 +186,9 @@ class Needleman(object):
                 jcol -= 1
             else:
                 break
-        self.alseq1 = list(reversed(alseq1))
-        self.alseq2 = list(reversed(alseq2))
-        self.__identity = (self.__identity / len(self.alseq1)) * 100
+        self.__alseq1 = list(reversed(alseq1))
+        self.__alseq2 = list(reversed(alseq2))
+        self.__identity = (self.__identity / len(self.__alseq1)) * 100
         return
 
     def __check_best_score(self, diagscore, topscore, leftscore, irow, jcol):

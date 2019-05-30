@@ -34,8 +34,10 @@ alignment.align()
 alignment.get_score()
 
 # Get the sequences aligned as lists
-al1 = alignment.alseq1
-al2 = alignment.alseq2
+al1, al2 = alignment.get_aligned_sequences("list")
+
+# Get the sequences as strings
+al1, al2 = alignment.get_aligned_sequences("str")
 
 # Change the matrix and run again
 alignment.change_matrix(minineedle.ScoreMatrix(match=4, miss=-4, gap=-2))

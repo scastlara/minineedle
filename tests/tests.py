@@ -184,3 +184,35 @@ def test_comparison_lower():
     needle2.change_matrix(minineedle.ScoreMatrix(1, -1, -1))
     needle2.align()
     assert(needle1 > needle2)
+
+def test_get_aligned_squences_list():
+    seq1 = miniseq.Sequence("seq1", "GCATGCU")
+    seq2 = miniseq.Sequence("seq2", "GATTACA")
+    needle = minineedle.Needleman(seq1, seq2)
+    needle.align()
+    seq_a, seq_b = needle.get_aligned_sequences()
+    assert(isinstance(seq_a, list))
+    assert(isinstance(seq_b, list))
+
+def test_get_aligned_squences_string():
+    seq1 = miniseq.Sequence("seq1", "GCATGCU")
+    seq2 = miniseq.Sequence("seq2", "GATTACA")
+    needle = minineedle.Needleman(seq1, seq2)
+    needle.align()
+    seq_a, seq_b = needle.get_aligned_sequences("str")
+    assert(isinstance(seq_a, str))
+    assert(isinstance(seq_b, str))
+
+def test_get_aligned_squences_wrong():
+    seq1 = miniseq.Sequence("seq1", "GCATGCU")
+    seq2 = miniseq.Sequence("seq2", "GATTACA")
+    needle = minineedle.Needleman(seq1, seq2)
+    needle.align()
+    try:
+        seq_a, seq_b = needle.get_aligned_sequences("wrong")
+        assert(0 == 1)
+    except ValueError:
+        assert(1 == 1)
+    else:
+        assert(0 == 1)
+    
