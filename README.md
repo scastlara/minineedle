@@ -2,17 +2,27 @@
 
 <img width="250" src="https://github.com/scastlara/minineedle/blob/master/minineedle/logo.png"/>
 
-Needleman Wunsch algorithm in python using [miniseq](https://github.com/scastlara/miniseq) objects
+Needleman-Wunsch and Smith-Waterman algorithms in python using [miniseq](https://github.com/scastlara/miniseq) objects
 
 ## Version
 v1.0.0
 
-## Algorithm
+## Algorithms
+
+### Needleman-Wunsch
 <img src="https://upload.wikimedia.org/wikipedia/commons/3/3f/Needleman-Wunsch_pairwise_sequence_alignment.png" width="300px">
 
 > The Needleman–Wunsch algorithm is an algorithm used in bioinformatics to align protein or nucleotide sequences. It was one of the first applications of dynamic programming to compare biological sequences. The algorithm was developed by Saul B. Needleman and Christian D. Wunsch and published in 1970. The algorithm essentially divides a large problem (e.g. the full sequence) into a series of smaller problems and uses the solutions to the smaller problems to reconstruct a solution to the larger problem. It is also sometimes referred to as the optimal matching algorithm and the global alignment technique. The Needleman–Wunsch algorithm is still widely used for optimal global alignment, particularly when the quality of the global alignment is of the utmost importance. 
 >
 > -- From the <cite>[Wikipedia article](https://en.wikipedia.org/wiki/Needleman%E2%80%93Wunsch_algorithm)</cite>
+
+### Smith-Waterman
+<img src="https://upload.wikimedia.org/wikipedia/commons/9/92/Smith-Waterman-Algorithm-Example-En.gif" width="300px">
+
+> The Smith–Waterman algorithm performs local sequence alignment; that is, for determining similar regions between two strings of nucleic acid sequences or protein sequences. Instead of looking at the entire sequence, the Smith–Waterman algorithm compares segments of all possible lengths and optimizes the similarity measure. 
+>
+> -- From the <cite>[Wikipedia article](https://en.wikipedia.org/wiki/Smith–Waterman_algorithm)</cite>
+
 
 ## Usage
 
@@ -25,7 +35,9 @@ fasta = miniseq.FASTA(filename="myfasta.fa")
 seq1, seq2 = fasta[0], fasta[1]
 
 # Create the instance
-alignment = minineedle.Needleman(seq1, seq2)
+alignment = minineedle.NeedlemanWunsch(seq1, seq2)
+# or
+# alignment = minineedle.SmithWaterman(seq1, seq2)
 
 # Make the alignment
 alignment.align()
@@ -47,8 +59,8 @@ alignment.align()
 print(alignment)
 
 # Sort a list of alignments by score
-first_al  = Needleman(seq1, seq2)
-second_al = Needleman(seq3, seq4)
+first_al  = NeedlemanWunsch(seq1, seq2)
+second_al = NeedlemanWunsch(seq3, seq4)
 
 for align in sorted([first_al, second_al], reverse=True):
     print(align)
@@ -64,8 +76,22 @@ sudo python3 setup.py install
 
 ## Classes
 
-### Needleman
-Alignment class. It has the following attributes:
+### NeedlemanWunsch
+Needleman-Wunsch alignment class. It has the following attributes:
+- seq1
+- seq2     
+- alseq1   
+- alseq2
+- nmatrix   
+- pmatrix   
+- smatrix  
+- score    
+- identity
+
+To create the instance you have to provide seq1 and seq2 as two strings.
+
+### SmithWaterman
+Smith-Waterman alignment class. It has the following attributes:
 - seq1
 - seq2     
 - alseq1   
