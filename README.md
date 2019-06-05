@@ -88,7 +88,7 @@ Needleman-Wunsch alignment class. It has the following attributes:
 - score    
 - identity
 
-To create the instance you have to provide seq1 and seq2 as two strings.
+To create the instance you have to provide two miniseq objects.
 
 ### SmithWaterman
 Smith-Waterman alignment class. It has the following attributes:
@@ -102,7 +102,7 @@ Smith-Waterman alignment class. It has the following attributes:
 - score    
 - identity
 
-To create the instance you have to provide seq1 and seq2 as two strings.
+To create the instance you have to provide two miniseq objects.
 
 ### ScoreMatrix
 With this class you can define your own score matrices. It has three attributes:
