@@ -5,7 +5,7 @@
 Needleman-Wunsch and Smith-Waterman algorithms in python using [miniseq](https://github.com/scastlara/miniseq) objects
 
 ## Version
-v1.0.0
+v2.0.0
 
 ## Algorithms
 
