@@ -8,20 +8,6 @@ class SmithWaterman(OptimalAlignment):
     def __init__(self, seq1, seq2):
         super(SmithWaterman, self).__init__(seq1, seq2)
 
-    
-    def align(self):
-        """
-        Performs a Smith-Waterman alignment with the given sequences and the 
-        corresponding ScoreMatrix.
-        """
-        self._add_initial_pointers()
-        self._add_gap_penalties()
-        self._fill_matrices()
-
-        imax, jmax = self._get_last_cell_position()
-        self._get_alignment_score(imax, jmax)
-        self._trace_back_alignment(imax, jmax)
-
     def _add_gap_penalties(self):
         """
         Fills number matrix first row and first column with the gap penalties.
