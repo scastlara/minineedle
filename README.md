@@ -27,7 +27,7 @@ v2.1.0
 ## Usage
 
 ```python
-import miniseq
+import minineedle
 
 
 # Use miniseq objects
@@ -95,7 +95,7 @@ Needleman-Wunsch alignment class. It has the following attributes:
 - score    
 - identity
 
-To create the instance you have to provide two miniseq objects.
+To create the instance you have to provide two iterable objects with elements that can be compared with "==".
 
 ### SmithWaterman
 Smith-Waterman alignment class. It has the following attributes:
