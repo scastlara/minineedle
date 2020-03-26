@@ -1,24 +1,47 @@
-import miniseq
 import minineedle
 
-def test_sequence_false():
+def test_iterable_false():
     '''
-    Tests if non-sequence objects are rejected by NeedlemanWunsch.
+    Tests if non-iterable objects are rejected by NeedlemanWunsch.
     '''
-    seq1 = miniseq.DNASequence("seq1", "ACTG")
-    seq2 = "NOT A SEQUENCE"
+    seq1 = "ACTG"
+    seq2 = 1
     try:
         minineedle.NeedlemanWunsch(seq1, seq2)
         assert(1 == 0)
-    except Exception:
+    except TypeError:
         assert(1 == 1)
     
-def test_sequence_true():
+def test_iterable_true():
     '''
-    Tests if sequence objects are accepted by NeedlemanWunsch.
+    Tests if iterable objects are accepted by NeedlemanWunsch.
     '''
-    seq1 = miniseq.DNASequence("seq1", "ACTG")
-    seq2 = miniseq.DNASequence("seq2", "ACTG")
+    seq1 = "ACTG"
+    seq2 = "ACTG"
+    try:
+        minineedle.NeedlemanWunsch(seq1, seq2)
+        assert(1 == 1)
+    except Exception:
+        assert(1 == 0)
+
+def test_iterable_true_list():
+    '''
+    Tests if iterable (lists) objects are accepted by NeedlemanWunsch.
+    '''
+    seq1 = ['A', 'C', 'T', 'G']
+    seq2 = ['A', 'C', 'T', 'G']
+    try:
+        minineedle.NeedlemanWunsch(seq1, seq2)
+        assert(1 == 1)
+    except Exception:
+        assert(1 == 0)
+
+def test_iterable_different():
+    '''
+    Tests if iterable (lists) objects are accepted by NeedlemanWunsch.
+    '''
+    seq1 = ['A', 'C', 'T', 'G']
+    seq2 = "ACTG"
     try:
         minineedle.NeedlemanWunsch(seq1, seq2)
         assert(1 == 1)
@@ -30,8 +53,8 @@ def test_change_matrix_false():
     Tests if non-ScoreMatrix object is rejected by NeedlemanWunsch's change_matrix
     method. 
     '''
-    seq1 = miniseq.DNASequence("seq1", "ACTG")
-    seq2 = miniseq.DNASequence("seq2", "ACTG")
+    seq1 = "ACTG"
+    seq2 = "ACTG"
     matrix = "NOT A MATRIX"
     needle = minineedle.NeedlemanWunsch(seq1, seq2)
     
@@ -46,8 +69,8 @@ def test_change_matrix_true():
     Tests if ScoreMatrix object is accepted by NeedlemanWunsch's change_matrix
     method. 
     '''
-    seq1 = miniseq.DNASequence("seq1", "ACTG")
-    seq2 = miniseq.DNASequence("seq2", "ACTG")
+    seq1 = "ACTG"
+    seq2 = "ACTG"
     matrix = minineedle.ScoreMatrix(1, -1, -1)
     needle = minineedle.NeedlemanWunsch(seq1, seq2)
     
@@ -71,8 +94,8 @@ def test_needleman_dynamic_matrix():
     '''
     Checks if alignment score matrix is correct.
     '''
-    seq1 = miniseq.Sequence("seq1", "GCATGCU")
-    seq2 = miniseq.Sequence("seq2", "GATTACA")
+    seq1 = "GCATGCU"
+    seq2 = "GATTACA"
     needle = minineedle.NeedlemanWunsch(seq1, seq2)
     needle.change_matrix(minineedle.ScoreMatrix(1, -1, -1))
     needle.align()
@@ -93,8 +116,8 @@ def test_needleman_pointer_matrix():
     '''
     Tests if pointer matrix is correct.
     '''
-    seq1 = miniseq.Sequence("seq1", "GCATGCU")
-    seq2 = miniseq.Sequence("seq2", "GATTACA")
+    seq1 = "GCATGCU"
+    seq2 = "GATTACA"
     needle = minineedle.NeedlemanWunsch(seq1, seq2)
     needle.change_matrix(minineedle.ScoreMatrix(1, -1, -1))
     needle.align()
@@ -114,8 +137,8 @@ def test_needleman_alignment():
     '''
     Checks if align method works
     '''
-    seq1 = miniseq.Sequence("seq1", "GCATGCU")
-    seq2 = miniseq.Sequence("seq2", "GATTACA")
+    seq1 = "GCATGCU"
+    seq2 = "GATTACA"
     needle = minineedle.NeedlemanWunsch(seq1, seq2)
     needle.change_matrix(minineedle.ScoreMatrix(1, -1, -1))
     needle.align()
@@ -126,19 +149,42 @@ def test_needleman_alignment_score():
     '''
     Tests if score is correctly computed.
     '''
-    seq1 = miniseq.Sequence("seq1", "GCATGCU")
-    seq2 = miniseq.Sequence("seq2", "GATTACA")
+    seq1 = "GCATGCU"
+    seq2 = "GATTACA"
     needle = minineedle.NeedlemanWunsch(seq1, seq2)
     needle.change_matrix(minineedle.ScoreMatrix(1, -1, -1))
     needle.align()
     assert(needle.get_score() == 0)
 
+def test_needleman_alignment_score_list():
+    '''
+    Tests if score is correctly computed.
+    '''
+    seq1 = ["G","C","A","T","G","C","U"]
+    seq2 = ["G","A","T","T","A","C","A"]
+    needle = minineedle.NeedlemanWunsch(seq1, seq2)
+    needle.change_matrix(minineedle.ScoreMatrix(1, -1, -1))
+    needle.align()
+    assert(needle.get_score() == 0)
+
+def test_needleman_alignment_score_different():
+    '''
+    Tests if score is correctly computed.
+    '''
+    seq1 = ["G","C","A","T","G","C","U"]
+    seq2 = "GATTACA"
+    needle = minineedle.NeedlemanWunsch(seq1, seq2)
+    needle.change_matrix(minineedle.ScoreMatrix(1, -1, -1))
+    needle.align()
+    assert(needle.get_score() == 0)
+
+
 def test_needleman_alignment_identity():
     '''
     Tests if score is correctly computed.
     '''
-    seq1 = miniseq.Sequence("seq1", "GCATGCU")
-    seq2 = miniseq.Sequence("seq2", "GATTACA")
+    seq1 = "GCATGCU"
+    seq2 = "GATTACA"
     needle = minineedle.NeedlemanWunsch(seq1, seq2)
     needle.change_matrix(minineedle.ScoreMatrix(1, -1, -1))
     needle.align()
@@ -148,19 +194,19 @@ def test_needleman_to_string():
     '''
     Tests string formatting of alignment object.
     '''
-    seq1 = miniseq.Sequence("seq1", "GCATGCU")
-    seq2 = miniseq.Sequence("seq2", "GATTACA")
+    seq1 = "GCATGCU"
+    seq2 = "GATTACA"
     needle = minineedle.NeedlemanWunsch(seq1, seq2)
     needle.change_matrix(minineedle.ScoreMatrix(1, -1, -1))
     needle.align()
-    assert(str(needle) == """Alignment of seq1 and seq2:\n\tGCA-TGCU\n\tG-ATTACA\n""")
+    assert(str(needle) == """Alignment of SEQUENCE 1 and SEQUENCE 2:\n\tGCA-TGCU\n\tG-ATTACA\n""")
 
 def test_needleman_comparison_equal():
     '''
     Tests score comparison of equal alignments
     '''
-    seq1 = miniseq.Sequence("seq1", "GCATGCU")
-    seq2 = miniseq.Sequence("seq2", "GATTACA")
+    seq1 = "GCATGCU"
+    seq2 = "GATTACA"
     needle1 = minineedle.NeedlemanWunsch(seq1, seq2)
     needle1.change_matrix(minineedle.ScoreMatrix(1, -1, -1))
     needle1.align()
@@ -173,9 +219,9 @@ def test_needleman_comparison_lower():
     '''
     Tests score comparison of different alignments
     '''
-    seq1 = miniseq.Sequence("seq1", "GCATGCU")
-    seq2 = miniseq.Sequence("seq2", "GATTACA")
-    seq3 = miniseq.Sequence("seq3", "LLLLLLL")
+    seq1 = "GCATGCU"
+    seq2 = "GATTACA"
+    seq3 = "LLLLLLL"
     needle1 = minineedle.NeedlemanWunsch(seq1, seq2)
     needle1.change_matrix(minineedle.ScoreMatrix(1, -1, -1))
     needle1.align()
@@ -185,8 +231,8 @@ def test_needleman_comparison_lower():
     assert(needle1 > needle2)
 
 def test_needleman_get_aligned_squences_list():
-    seq1 = miniseq.Sequence("seq1", "GCATGCU")
-    seq2 = miniseq.Sequence("seq2", "GATTACA")
+    seq1 = "GCATGCU"
+    seq2 = "GATTACA"
     needle = minineedle.NeedlemanWunsch(seq1, seq2)
     needle.align()
     seq_a, seq_b = needle.get_aligned_sequences()
@@ -194,8 +240,8 @@ def test_needleman_get_aligned_squences_list():
     assert(isinstance(seq_b, list))
 
 def test_needleman_get_aligned_squences_string():
-    seq1 = miniseq.Sequence("seq1", "GCATGCU")
-    seq2 = miniseq.Sequence("seq2", "GATTACA")
+    seq1 = "GCATGCU"
+    seq2 = "GATTACA"
     needle = minineedle.NeedlemanWunsch(seq1, seq2)
     needle.align()
     seq_a, seq_b = needle.get_aligned_sequences("str")
@@ -203,8 +249,8 @@ def test_needleman_get_aligned_squences_string():
     assert(isinstance(seq_b, str))
 
 def test_needleman_get_aligned_squences_wrong():
-    seq1 = miniseq.Sequence("seq1", "GCATGCU")
-    seq2 = miniseq.Sequence("seq2", "GATTACA")
+    seq1 = "GCATGCU"
+    seq2 = "GATTACA"
     needle = minineedle.NeedlemanWunsch(seq1, seq2)
     needle.align()
     try:
@@ -219,8 +265,8 @@ def test_smith_dynamic_matrix():
     '''
     Checks if alignment score matrix is correct.
     '''
-    seq1 = miniseq.Sequence("seq1", "TGTTACGG")
-    seq2 = miniseq.Sequence("seq2", "GGTTGACTA")
+    seq1 = "TGTTACGG"
+    seq2 = "GGTTGACTA"
     smith = minineedle.SmithWaterman(seq1, seq2)
     smith.change_matrix(minineedle.ScoreMatrix(3, -3, -2))
     smith.align()
@@ -242,8 +288,8 @@ def test_smith_alignment():
     '''
     Checks if align method works
     '''
-    seq1 = miniseq.Sequence("seq1", "TGTTACGG")
-    seq2 = miniseq.Sequence("seq2", "GGTTGACTA")
+    seq1 = "TGTTACGG"
+    seq2 = "GGTTGACTA"
     smith = minineedle.SmithWaterman(seq1, seq2)
     smith.change_matrix(minineedle.ScoreMatrix(3, -3, -2))
     smith.align()
@@ -254,8 +300,8 @@ def test_smith_alignment_score():
     '''
     Checks if align method works
     '''
-    seq1 = miniseq.Sequence("seq1", "TGTTACGG")
-    seq2 = miniseq.Sequence("seq2", "GGTTGACTA")
+    seq1 = "TGTTACGG"
+    seq2 = "GGTTGACTA"
     smith = minineedle.SmithWaterman(seq1, seq2)
     smith.change_matrix(minineedle.ScoreMatrix(3, -3, -2))
     smith.align()

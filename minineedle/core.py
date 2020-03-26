@@ -12,20 +12,17 @@ class OptimalAlignment(object):
         self._nmatrix  = self._initialize_number_matrix()
         self._pmatrix  = self._initialize_pointers_matrix()
 
-        try:
-            self.seq1.get_sequence()
-            self.seq2.get_sequence()
-            self.seq1.get_identifier()
-            self.seq2.get_identifier()
-        except NoSequenceObject as error:
-            sys.stderr.write(str(error))
-            sys.exit(1)
+        self._is_iterable(self.seq1)
+        self._is_iterable(self.seq2)
+
+    def _is_iterable(self, iterable):
+        iter(iterable)
 
     def __str__(self):
         if not self._alseq1:
             self.align()
-        return str("Alignment of %s and %s:\n\t%s\n\t%s\n" % (self.seq1.get_identifier(),
-                                                              self.seq2.get_identifier(),
+        return str("Alignment of %s and %s:\n\t%s\n\t%s\n" % ("SEQUENCE 1",
+                                                              "SEQUENCE 2",
                                                               "".join(self._alseq1),
                                                               "".join(self._alseq2)
                                                               ))
@@ -150,7 +147,7 @@ class OptimalAlignment(object):
                 topscore  = self._nmatrix[irow][jcol + 1] + self.smatrix.gap
                 leftscore = self._nmatrix[irow + 1][jcol] + self.smatrix.gap
                 diagscore = self._nmatrix[irow][jcol]
-                if self.seq1.get_sequence()[jcol] == self.seq2.get_sequence()[irow]:
+                if self.seq1[jcol] == self.seq2[irow]:
                     diagscore += self.smatrix.match
                 else:
                     diagscore += self.smatrix.miss
@@ -164,18 +161,18 @@ class OptimalAlignment(object):
 
         while True:
             if self._pmatrix[irow][jcol] == "diag":
-                alseq1.append(self.seq1.get_sequence()[jcol - 1])
-                alseq2.append(self.seq2.get_sequence()[irow - 1])
-                if self.seq1.get_sequence()[jcol - 1] == self.seq2.get_sequence()[irow - 1]:
+                alseq1.append(self.seq1[jcol - 1])
+                alseq2.append(self.seq2[irow - 1])
+                if self.seq1[jcol - 1] == self.seq2[irow - 1]:
                     self._identity += 1
                 irow -= 1
                 jcol -= 1
             elif self._pmatrix[irow][jcol] == "up":
                 alseq1.append("-")
-                alseq2.append(self.seq2.get_sequence()[irow - 1] )
+                alseq2.append(self.seq2[irow - 1] )
                 irow -= 1
             elif self._pmatrix[irow][jcol] == "left":
-                alseq1.append(self.seq1.get_sequence()[jcol - 1] )
+                alseq1.append(self.seq1[jcol - 1] )
                 alseq2.append("-")
                 jcol -= 1
             else:
@@ -210,11 +207,3 @@ class ScoreMatrix(object):
     def __str__(self):
         print_str = "Match:%s Missmatch:%s Gap:%s" % (self.match, self.miss, self.gap)
         return print_str
-
-
-class NoSequenceObject(Exception):
-    '''
-    Exception to handle no sequence objects passed to Needleman
-    '''
-    def __str__(self):
-        return("ERROR: Class Needleman takes two sequence objects")

@@ -2,7 +2,7 @@
 
 <img width="250" src="https://github.com/scastlara/minineedle/blob/master/minineedle/logo.png"/>
 
-Needleman-Wunsch and Smith-Waterman algorithms in python using [miniseq](https://github.com/scastlara/miniseq) objects
+Needleman-Wunsch and Smith-Waterman algorithms in python for any iterable objects.
 
 ## Version
 v2.0.0
@@ -28,11 +28,17 @@ v2.0.0
 
 ```python
 import miniseq
-import minineedle
 
+
+# Use miniseq objects
 # Load sequences as miniseq FASTA object
+import miniseq
 fasta = miniseq.FASTA(filename="myfasta.fa")
 seq1, seq2 = fasta[0], fasta[1]
+
+# Or use strings, lists, etc
+# seq1, seq2 = "ACTG", "ATCTG"
+# seq1, seq2 = ["A","C","T","G"], ["A","T","C","T","G"]
 
 # Create the instance
 alignment = minineedle.NeedlemanWunsch(seq1, seq2)
@@ -66,6 +72,8 @@ for align in sorted([first_al, second_al], reverse=True):
     print(align)
 
 ```
+
+
 
 ## Install
 ```bash
@@ -101,7 +109,7 @@ Smith-Waterman alignment class. It has the following attributes:
 - score    
 - identity
 
-To create the instance you have to provide two miniseq objects.
+To create the instance you have to provide two iterable objects with elements that can be compared with "==".
 
 ### ScoreMatrix
 With this class you can define your own score matrices. It has three attributes:
