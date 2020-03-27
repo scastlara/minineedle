@@ -369,3 +369,10 @@ def test_strange_alignment():
     needle.align()
     needle.gap_character = "+"
     assert(needle.get_aligned_sequences("str")[0] == "TG--T+A--CTA")
+
+
+def test_get_gap_character():
+    seq1 = "TGTTACGG"
+    seq2 = "GGTTGACTA"
+    alignment = minineedle.NeedlemanWunsch(seq1, seq2)
+    assert(alignment.gap_character == "-")
