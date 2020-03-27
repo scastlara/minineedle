@@ -142,8 +142,8 @@ def test_needleman_alignment():
     needle = minineedle.NeedlemanWunsch(seq1, seq2)
     needle.change_matrix(minineedle.ScoreMatrix(1, -1, -1))
     needle.align()
-    assert(needle._alseq1 == ["G", "C", "A", "-", "T", "G", "C", "U"])
-    assert(needle._alseq2 == ["G", "-", "A", "T", "T", "A", "C", "A" ])
+    assert(needle._alseq1 == ["G", "C", "A", minineedle.Gap(), "T", "G", "C", "U"])
+    assert(needle._alseq2 == ["G", minineedle.Gap(), "A", "T", "T", "A", "C", "A" ])
 
 def test_needleman_alignment_score():
     '''
@@ -255,7 +255,7 @@ def test_needleman_comparison_lower():
     needle2.align()
     assert(needle1 > needle2)
 
-def test_needleman_get_aligned_squences_list():
+def test_needleman_get_aligned_sequences_list():
     seq1 = "GCATGCU"
     seq2 = "GATTACA"
     needle = minineedle.NeedlemanWunsch(seq1, seq2)
@@ -264,7 +264,7 @@ def test_needleman_get_aligned_squences_list():
     assert(isinstance(seq_a, list))
     assert(isinstance(seq_b, list))
 
-def test_needleman_get_aligned_squences_string():
+def test_needleman_get_aligned_sequences_string():
     seq1 = "GCATGCU"
     seq2 = "GATTACA"
     needle = minineedle.NeedlemanWunsch(seq1, seq2)
@@ -273,7 +273,7 @@ def test_needleman_get_aligned_squences_string():
     assert(isinstance(seq_a, str))
     assert(isinstance(seq_b, str))
 
-def test_needleman_get_aligned_squences_wrong():
+def test_needleman_get_aligned_sequences_wrong():
     seq1 = "GCATGCU"
     seq2 = "GATTACA"
     needle = minineedle.NeedlemanWunsch(seq1, seq2)
@@ -318,8 +318,8 @@ def test_smith_alignment():
     smith = minineedle.SmithWaterman(seq1, seq2)
     smith.change_matrix(minineedle.ScoreMatrix(3, -3, -2))
     smith.align()
-    assert(smith._alseq1 == ["G", "T", "T", "-", "A", "C"])
-    assert(smith._alseq2 == ["G", "T", "T", "G", "A", "C"])
+    assert(smith.get_aligned_sequences()[0] == ["G", "T", "T", minineedle.Gap(), "A", "C"])
+    assert(smith.get_aligned_sequences()[1] == ["G", "T", "T", "G", "A", "C"])
 
 def test_smith_alignment_score():
     '''
@@ -331,3 +331,41 @@ def test_smith_alignment_score():
     smith.change_matrix(minineedle.ScoreMatrix(3, -3, -2))
     smith.align()
     assert(smith.get_score() == 13)
+
+
+def test_gap_char_change():
+    '''
+    Checks change of Gap character
+    '''
+    gap = minineedle.Gap()
+    gap.character = "imagap"
+    assert(str(gap) == "imagap")
+
+def test_gap_change_alignment():
+    seq1 = "TGTTACGG"
+    seq2 = "GGTTGACTA"
+    needle = minineedle.NeedlemanWunsch(seq1, seq2)
+    needle.change_matrix(minineedle.ScoreMatrix(3, -3, -2))
+    needle.align()
+    needle.gap_character = "-gap-"
+    seq1, _ = needle.get_aligned_sequences(sequence_format="str")
+    assert(seq1 == "TGTT-gap-ACGG")
+
+def test_gap_change_alignment_before():
+    seq1 = "TGTTACGG"
+    seq2 = "GGTTGACTA"
+    needle = minineedle.NeedlemanWunsch(seq1, seq2)
+    needle.change_matrix(minineedle.ScoreMatrix(3, -3, -2))
+    needle.gap_character = "-gap-"
+    needle.align()
+    seq1, _ = needle.get_aligned_sequences(sequence_format="str")
+    assert(seq1 == "TGTT-gap-ACGG")
+
+def test_strange_alignment():
+    seq1 = "TG--TA--CTA"
+    seq2 = "GG--TGA--CTA"
+    needle = minineedle.NeedlemanWunsch(seq1, seq2)
+    needle.change_matrix(minineedle.ScoreMatrix(2, -2, -3))
+    needle.align()
+    needle.gap_character = "+"
+    assert(needle.get_aligned_sequences("str")[0] == "TG--T+A--CTA")

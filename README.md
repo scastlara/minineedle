@@ -64,6 +64,10 @@ alignment.align()
 # Print the sequences aligned
 print(alignment)
 
+# Change gap character
+alignment.gap_character = "-gap-"
+print(alignment)
+
 # Sort a list of alignments by score
 first_al  = NeedlemanWunsch(seq1, seq2)
 second_al = NeedlemanWunsch(seq3, seq4)
@@ -94,8 +98,9 @@ Needleman-Wunsch alignment class. It has the following attributes:
 - smatrix  
 - score    
 - identity
+- gap_character
 
-To create the instance you have to provide two miniseq objects.
+To create the instance you have to provide two iterable objects.
 
 ### SmithWaterman
 Smith-Waterman alignment class. It has the following attributes:
