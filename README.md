@@ -5,7 +5,7 @@
 Needleman-Wunsch and Smith-Waterman algorithms in python for any iterable objects.
 
 ## Version
-v2.0.0
+v2.1.0
 
 ## Algorithms
 
@@ -27,7 +27,7 @@ v2.0.0
 ## Usage
 
 ```python
-import miniseq
+import minineedle
 
 
 # Use miniseq objects
@@ -100,7 +100,7 @@ Needleman-Wunsch alignment class. It has the following attributes:
 - identity
 - gap_character
 
-To create the instance you have to provide two iterable objects.
+To create the instance you have to provide two iterable objects with elements that can be compared with "==".
 
 ### SmithWaterman
 Smith-Waterman alignment class. It has the following attributes:
