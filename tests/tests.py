@@ -178,6 +178,31 @@ def test_needleman_alignment_score_different():
     needle.align()
     assert(needle.get_score() == 0)
 
+def test_needleman_alignment_integers():
+    '''
+    Tests if algorithm can handle integers
+    '''
+    seq1 = [1,2,3,5,1]
+    seq2 = [1,2,9,9,9,3,5,1]
+    needle = minineedle.NeedlemanWunsch(seq1, seq2)
+    needle.change_matrix(minineedle.ScoreMatrix(1, -1, -1))
+    needle.align()
+    assert(needle.get_score() == 2)
+
+
+def test_needleman_alignment_residue_mix():
+    '''
+    Tests if algorithm can handle different types in list
+    '''
+    seq1 = [1,"C","A",2,"G","C","U"]
+    seq2 = ["G","A","T","T","A","C","A"]
+    needle = minineedle.NeedlemanWunsch(seq1, seq2)
+    needle.change_matrix(minineedle.ScoreMatrix(1, -1, -1))
+    needle.align()
+    try:
+        assert(1==1)
+    except ValueError:
+        assert(1==0)
 
 def test_needleman_alignment_identity():
     '''

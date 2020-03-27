@@ -4,8 +4,8 @@ class OptimalAlignment(object):
     def __init__(self, seq1, seq2):
         self.seq1     = seq1
         self.seq2     = seq2
-        self._alseq1   = list()
-        self._alseq2   = list()
+        self._alseq1   = []
+        self._alseq2   = []
         self.smatrix  = ScoreMatrix(match=1, miss=-1, gap=-1)
         self._score    = int()
         self._identity = float()
@@ -21,11 +21,11 @@ class OptimalAlignment(object):
     def __str__(self):
         if not self._alseq1:
             self.align()
-        return str("Alignment of %s and %s:\n\t%s\n\t%s\n" % ("SEQUENCE 1",
+        return "Alignment of {} and {}:\n\t{}\n\t{}\n".format("SEQUENCE 1",
                                                               "SEQUENCE 2",
-                                                              "".join(self._alseq1),
-                                                              "".join(self._alseq2)
-                                                              ))
+                                                              "".join([ str(x) for x in self._alseq1 ]),
+                                                              "".join([ str(x) for x in self._alseq2 ])
+                                                              )
 
     def __lt__(self, other):
         return self.get_score() < other.get_score()
