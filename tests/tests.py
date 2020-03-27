@@ -376,3 +376,13 @@ def test_get_gap_character():
     seq2 = "GGTTGACTA"
     alignment = minineedle.NeedlemanWunsch(seq1, seq2)
     assert(alignment.gap_character == "-")
+
+
+def test_gap_equal():
+    g1 = minineedle.Gap()
+    g2 = minineedle.Gap()
+    assert(g1 == g2)
+
+def test_gap_char():
+    gap = minineedle.Gap("a")
+    assert(str(gap) == "a")

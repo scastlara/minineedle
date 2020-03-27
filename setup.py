@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='minineedle',
-      version='2.0',
+      version='2.1',
       description='Minimal needleman-wunsch',
       url='http://github.com/scastlara/minineedle',
       author='S. Castillo-Lara',

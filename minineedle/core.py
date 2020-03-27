@@ -229,7 +229,7 @@ class ScoreMatrix(object):
 
 class Gap(object):
     def __init__(self, character="-"):
-        self.character = "-"
+        self.character = character
 
     def __str__(self):
         return str(self.character)
