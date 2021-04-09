@@ -6,3 +6,6 @@
 build/
 *.swp
 *.egg-info/
+
+# Virtualenv
+venv

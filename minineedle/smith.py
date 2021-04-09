@@ -1,10 +1,13 @@
 import sys
+
 from .core import OptimalAlignment
+
 
 class SmithWaterman(OptimalAlignment):
     """
     Smith-Waterman algorithm
     """
+
     def __init__(self, seq1, seq2):
         super(SmithWaterman, self).__init__(seq1, seq2)
 
@@ -20,7 +23,7 @@ class SmithWaterman(OptimalAlignment):
 
     def _get_last_cell_position(self):
         """
-        Returns the cell row and column of the last cell in the matrix in which 
+        Returns the cell row and column of the last cell in the matrix in which
         the alignment ends. For Needleman-Wunsch this will be the last cell of the matrix,
         for Smith-Waterman will be the cell with the highest score.
         """
@@ -37,7 +40,7 @@ class SmithWaterman(OptimalAlignment):
 
     def _check_best_score(self, diagscore, topscore, leftscore, irow, jcol):
         best_pointer = str()
-        best_score   = int()
+        best_score = int()
 
         if diagscore >= topscore:
             if diagscore >= leftscore:
@@ -54,6 +57,6 @@ class SmithWaterman(OptimalAlignment):
             best_pointer = None
             best_score = 0
 
-        self._pmatrix[irow + 1][jcol +1] = best_pointer
-        self._nmatrix[irow + 1][jcol +1] = best_score
+        self._pmatrix[irow + 1][jcol + 1] = best_pointer
+        self._nmatrix[irow + 1][jcol + 1] = best_score
         return
