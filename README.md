@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/scastlara/minineedle.svg?branch=master)](https://travis-ci.org/scastlara/minineedle) [![Coverage Status](https://coveralls.io/repos/github/scastlara/minineedle/badge.svg?branch=master)](https://coveralls.io/github/scastlara/minineedle?branch=master) [![PyPI version](https://badge.fury.io/py/minineedle.svg)](https://badge.fury.io/py/minineedle)
+![Build Status](https://github.com/scastlara/minineedle/actions/workflows/python-app.yml/badge.svg) [![PyPI version](https://badge.fury.io/py/minineedle.svg)](https://badge.fury.io/py/minineedle)
 
 <img width="250" src="https://github.com/scastlara/minineedle/blob/master/minineedle/logo.png"/>
 
