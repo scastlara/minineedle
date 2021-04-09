@@ -4,9 +4,6 @@
 
 Needleman-Wunsch and Smith-Waterman algorithms in python for any iterable objects.
 
-## Version
-v2.1.1
-
 ## Algorithms
 
 ### Needleman-Wunsch
