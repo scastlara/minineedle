@@ -24,7 +24,7 @@ Needleman-Wunsch and Smith-Waterman algorithms in python for any iterable object
 ## Usage
 
 ```python
-from minineedle import needle, smith
+from minineedle import needle, smith, core
 
 # Use miniseq objects
 # Load sequences as miniseq FASTA object
