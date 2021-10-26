@@ -1,5 +1,3 @@
-import sys
-
 from .core import OptimalAlignment
 
 

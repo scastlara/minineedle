@@ -24,8 +24,7 @@ Needleman-Wunsch and Smith-Waterman algorithms in python for any iterable object
 ## Usage
 
 ```python
-import minineedle
-
+from minineedle import needle, smith
 
 # Use miniseq objects
 # Load sequences as miniseq FASTA object
@@ -38,9 +37,9 @@ seq1, seq2 = fasta[0], fasta[1]
 # seq1, seq2 = ["A","C","T","G"], ["A","T","C","T","G"]
 
 # Create the instance
-alignment = minineedle.NeedlemanWunsch(seq1, seq2)
+alignment = needle.NeedlemanWunsch(seq1, seq2)
 # or
-# alignment = minineedle.SmithWaterman(seq1, seq2)
+# alignment = smith.SmithWaterman(seq1, seq2)
 
 # Make the alignment
 alignment.align()
@@ -55,7 +54,7 @@ al1, al2 = alignment.get_aligned_sequences("list")
 al1, al2 = alignment.get_aligned_sequences("str")
 
 # Change the matrix and run again
-alignment.change_matrix(minineedle.ScoreMatrix(match=4, miss=-4, gap=-2))
+alignment.change_matrix(core.ScoreMatrix(match=4, miss=-4, gap=-2))
 alignment.align()
 
 # Print the sequences aligned
@@ -66,8 +65,8 @@ alignment.gap_character = "-gap-"
 print(alignment)
 
 # Sort a list of alignments by score
-first_al  = NeedlemanWunsch(seq1, seq2)
-second_al = NeedlemanWunsch(seq3, seq4)
+first_al  = needle.NeedlemanWunsch(seq1, seq2)
+second_al = needle.NeedlemanWunsch(seq3, seq4)
 
 for align in sorted([first_al, second_al], reverse=True):
     print(align)

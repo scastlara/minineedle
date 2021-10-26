@@ -1,12 +1,12 @@
-import sys
+from typing import Any, Iterable
 
 
-class OptimalAlignment(object):
-    def __init__(self, seq1, seq2):
+class OptimalAlignment:
+    def __init__(self, seq1: Iterable, seq2: Iterable):
         self.seq1 = seq1
         self.seq2 = seq2
-        self._alseq1 = []
-        self._alseq2 = []
+        self._alseq1: list[Any] = []
+        self._alseq2: list[Any] = []
         self.smatrix = ScoreMatrix(match=1, miss=-1, gap=-1)
         self._score = int()
         self._identity = float()
@@ -22,7 +22,7 @@ class OptimalAlignment(object):
         return self._gap_character
 
     @gap_character.setter
-    def gap_character(self, var):
+    def gap_character(self, var: str):
         self._gap_character = var
         if self._alseq1:
             self._alseq1 = self._change_gap_char(self._alseq1)
@@ -174,7 +174,6 @@ class OptimalAlignment(object):
                     diagscore += self.smatrix.miss
 
                 self._check_best_score(diagscore, topscore, leftscore, irow, jcol)
-        return
 
     def _trace_back_alignment(self, irow, jcol):
         alseq1 = list()
@@ -208,11 +207,11 @@ class OptimalAlignment(object):
         Decides best score for a given cell. Will change depending if using
         Needleman-Wunsch or Smith-Waterman
         """
-        return
+        raise NotImplementedError
 
 
 class ScoreMatrix(object):
-    def __init__(self, match, miss, gap):
+    def __init__(self, match: int, miss: int, gap: int):
         self.match = match
         self.miss = miss
         self.gap = gap
@@ -225,12 +224,11 @@ class ScoreMatrix(object):
             raise ValueError("match, miss, and gap should be integers.")
 
     def __str__(self):
-        print_str = "Match:%s Missmatch:%s Gap:%s" % (self.match, self.miss, self.gap)
-        return print_str
+        return f"Match:{self.match} Missmatch:{self.miss} Gap:{self.gap}"
 
 
 class Gap(object):
-    def __init__(self, character="-"):
+    def __init__(self, character: str = "-"):
         self.character = character
 
     def __str__(self):

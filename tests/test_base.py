@@ -1,4 +1,4 @@
-import minineedle
+from minineedle import core, needle, smith
 
 
 def test_iterable_false():
@@ -8,7 +8,7 @@ def test_iterable_false():
     seq1 = "ACTG"
     seq2 = 1
     try:
-        minineedle.NeedlemanWunsch(seq1, seq2)
+        needle.NeedlemanWunsch(seq1, seq2)
         assert 1 == 0
     except TypeError:
         assert 1 == 1
@@ -21,7 +21,7 @@ def test_iterable_true():
     seq1 = "ACTG"
     seq2 = "ACTG"
     try:
-        minineedle.NeedlemanWunsch(seq1, seq2)
+        needle.NeedlemanWunsch(seq1, seq2)
         assert 1 == 1
     except Exception:
         assert 1 == 0
@@ -34,7 +34,7 @@ def test_iterable_true_list():
     seq1 = ["A", "C", "T", "G"]
     seq2 = ["A", "C", "T", "G"]
     try:
-        minineedle.NeedlemanWunsch(seq1, seq2)
+        needle.NeedlemanWunsch(seq1, seq2)
         assert 1 == 1
     except Exception:
         assert 1 == 0
@@ -47,7 +47,7 @@ def test_iterable_different():
     seq1 = ["A", "C", "T", "G"]
     seq2 = "ACTG"
     try:
-        minineedle.NeedlemanWunsch(seq1, seq2)
+        needle.NeedlemanWunsch(seq1, seq2)
         assert 1 == 1
     except Exception:
         assert 1 == 0
@@ -61,10 +61,10 @@ def test_change_matrix_false():
     seq1 = "ACTG"
     seq2 = "ACTG"
     matrix = "NOT A MATRIX"
-    needle = minineedle.NeedlemanWunsch(seq1, seq2)
+    needle_alignment = needle.NeedlemanWunsch(seq1, seq2)
 
     try:
-        needle.change_matrix(matrix)
+        needle_alignment.change_matrix(matrix)
         assert 1 == 0
     except ValueError:
         assert 1 == 1
@@ -77,11 +77,11 @@ def test_change_matrix_true():
     """
     seq1 = "ACTG"
     seq2 = "ACTG"
-    matrix = minineedle.ScoreMatrix(1, -1, -1)
-    needle = minineedle.NeedlemanWunsch(seq1, seq2)
+    matrix = core.ScoreMatrix(1, -1, -1)
+    needle_alignment = needle.NeedlemanWunsch(seq1, seq2)
 
     try:
-        needle.change_matrix(matrix)
+        needle_alignment.change_matrix(matrix)
         assert 1 == 1
     except ValueError:
         assert 1 == 0
@@ -92,7 +92,7 @@ def test_matrix_parameters():
     Checks if ScoreMatrix object rejects non-integer parameters.
     """
     try:
-        matrix = minineedle.ScoreMatrix(1, 2, "b")
+        matrix = core.ScoreMatrix(1, 2, "b")
         assert 1 == 0
     except ValueError:
         assert 1 == 1
@@ -104,9 +104,9 @@ def test_needleman_dynamic_matrix():
     """
     seq1 = "GCATGCU"
     seq2 = "GATTACA"
-    needle = minineedle.NeedlemanWunsch(seq1, seq2)
-    needle.change_matrix(minineedle.ScoreMatrix(1, -1, -1))
-    needle.align()
+    needle_alignment = needle.NeedlemanWunsch(seq1, seq2)
+    needle_alignment.change_matrix(core.ScoreMatrix(1, -1, -1))
+    needle_alignment.align()
     expected_matrix = [
         [0, -1, -2, -3, -4, -5, -6, -7],
         [-1, 1, 0, -1, -2, -3, -4, -5],
@@ -117,7 +117,7 @@ def test_needleman_dynamic_matrix():
         [-6, -4, -2, -2, -1, -1, 1, 0],
         [-7, -5, -3, -1, -2, -2, 0, 0],
     ]
-    assert needle._nmatrix == expected_matrix
+    assert needle_alignment._nmatrix == expected_matrix
 
 
 def test_needleman_pointer_matrix():
@@ -126,9 +126,9 @@ def test_needleman_pointer_matrix():
     """
     seq1 = "GCATGCU"
     seq2 = "GATTACA"
-    needle = minineedle.NeedlemanWunsch(seq1, seq2)
-    needle.change_matrix(minineedle.ScoreMatrix(1, -1, -1))
-    needle.align()
+    needle_alignment = needle.NeedlemanWunsch(seq1, seq2)
+    needle_alignment.change_matrix(core.ScoreMatrix(1, -1, -1))
+    needle_alignment.align()
     expected_matrix = [
         [None, "left", "left", "left", "left", "left", "left", "left"],
         ["up", "diag", "left", "left", "left", "diag", "left", "left"],
@@ -139,7 +139,7 @@ def test_needleman_pointer_matrix():
         ["up", "up", "diag", "up", "up", "diag", "diag", "left"],
         ["up", "up", "up", "diag", "left", "diag", "up", "diag"],
     ]
-    assert needle._pmatrix == expected_matrix
+    assert needle_alignment._pmatrix == expected_matrix
 
 
 def test_needleman_alignment():
@@ -148,11 +148,11 @@ def test_needleman_alignment():
     """
     seq1 = "GCATGCU"
     seq2 = "GATTACA"
-    needle = minineedle.NeedlemanWunsch(seq1, seq2)
-    needle.change_matrix(minineedle.ScoreMatrix(1, -1, -1))
-    needle.align()
-    assert needle._alseq1 == ["G", "C", "A", minineedle.Gap(), "T", "G", "C", "U"]
-    assert needle._alseq2 == ["G", minineedle.Gap(), "A", "T", "T", "A", "C", "A"]
+    needle_alignment = needle.NeedlemanWunsch(seq1, seq2)
+    needle_alignment.change_matrix(core.ScoreMatrix(1, -1, -1))
+    needle_alignment.align()
+    assert needle_alignment._alseq1 == ["G", "C", "A", core.Gap(), "T", "G", "C", "U"]
+    assert needle_alignment._alseq2 == ["G", core.Gap(), "A", "T", "T", "A", "C", "A"]
 
 
 def test_needleman_alignment_score():
@@ -161,10 +161,10 @@ def test_needleman_alignment_score():
     """
     seq1 = "GCATGCU"
     seq2 = "GATTACA"
-    needle = minineedle.NeedlemanWunsch(seq1, seq2)
-    needle.change_matrix(minineedle.ScoreMatrix(1, -1, -1))
-    needle.align()
-    assert needle.get_score() == 0
+    needle_alignment = needle.NeedlemanWunsch(seq1, seq2)
+    needle_alignment.change_matrix(core.ScoreMatrix(1, -1, -1))
+    needle_alignment.align()
+    assert needle_alignment.get_score() == 0
 
 
 def test_needleman_alignment_score_list():
@@ -173,10 +173,10 @@ def test_needleman_alignment_score_list():
     """
     seq1 = ["G", "C", "A", "T", "G", "C", "U"]
     seq2 = ["G", "A", "T", "T", "A", "C", "A"]
-    needle = minineedle.NeedlemanWunsch(seq1, seq2)
-    needle.change_matrix(minineedle.ScoreMatrix(1, -1, -1))
-    needle.align()
-    assert needle.get_score() == 0
+    needle_alignment = needle.NeedlemanWunsch(seq1, seq2)
+    needle_alignment.change_matrix(core.ScoreMatrix(1, -1, -1))
+    needle_alignment.align()
+    assert needle_alignment.get_score() == 0
 
 
 def test_needleman_alignment_score_different():
@@ -185,10 +185,10 @@ def test_needleman_alignment_score_different():
     """
     seq1 = ["G", "C", "A", "T", "G", "C", "U"]
     seq2 = "GATTACA"
-    needle = minineedle.NeedlemanWunsch(seq1, seq2)
-    needle.change_matrix(minineedle.ScoreMatrix(1, -1, -1))
-    needle.align()
-    assert needle.get_score() == 0
+    needle_alignment = needle.NeedlemanWunsch(seq1, seq2)
+    needle_alignment.change_matrix(core.ScoreMatrix(1, -1, -1))
+    needle_alignment.align()
+    assert needle_alignment.get_score() == 0
 
 
 def test_needleman_alignment_integers():
@@ -197,10 +197,10 @@ def test_needleman_alignment_integers():
     """
     seq1 = [1, 2, 3, 5, 1]
     seq2 = [1, 2, 9, 9, 9, 3, 5, 1]
-    needle = minineedle.NeedlemanWunsch(seq1, seq2)
-    needle.change_matrix(minineedle.ScoreMatrix(1, -1, -1))
-    needle.align()
-    assert needle.get_score() == 2
+    needle_alignment = needle.NeedlemanWunsch(seq1, seq2)
+    needle_alignment.change_matrix(core.ScoreMatrix(1, -1, -1))
+    needle_alignment.align()
+    assert needle_alignment.get_score() == 2
 
 
 def test_needleman_alignment_residue_mix():
@@ -209,9 +209,9 @@ def test_needleman_alignment_residue_mix():
     """
     seq1 = [1, "C", "A", 2, "G", "C", "U"]
     seq2 = ["G", "A", "T", "T", "A", "C", "A"]
-    needle = minineedle.NeedlemanWunsch(seq1, seq2)
-    needle.change_matrix(minineedle.ScoreMatrix(1, -1, -1))
-    needle.align()
+    needle_alignment = needle.NeedlemanWunsch(seq1, seq2)
+    needle_alignment.change_matrix(core.ScoreMatrix(1, -1, -1))
+    needle_alignment.align()
     try:
         assert 1 == 1
     except ValueError:
@@ -224,10 +224,10 @@ def test_needleman_alignment_identity():
     """
     seq1 = "GCATGCU"
     seq2 = "GATTACA"
-    needle = minineedle.NeedlemanWunsch(seq1, seq2)
-    needle.change_matrix(minineedle.ScoreMatrix(1, -1, -1))
-    needle.align()
-    assert needle.get_identity() == 50.0
+    needle_alignment = needle.NeedlemanWunsch(seq1, seq2)
+    needle_alignment.change_matrix(core.ScoreMatrix(1, -1, -1))
+    needle_alignment.align()
+    assert needle_alignment.get_identity() == 50.0
 
 
 def test_needleman_to_string():
@@ -236,10 +236,10 @@ def test_needleman_to_string():
     """
     seq1 = "GCATGCU"
     seq2 = "GATTACA"
-    needle = minineedle.NeedlemanWunsch(seq1, seq2)
-    needle.change_matrix(minineedle.ScoreMatrix(1, -1, -1))
-    needle.align()
-    assert str(needle) == """Alignment of SEQUENCE 1 and SEQUENCE 2:\n\tGCA-TGCU\n\tG-ATTACA\n"""
+    needle_alignment = needle.NeedlemanWunsch(seq1, seq2)
+    needle_alignment.change_matrix(core.ScoreMatrix(1, -1, -1))
+    needle_alignment.align()
+    assert str(needle_alignment) == """Alignment of SEQUENCE 1 and SEQUENCE 2:\n\tGCA-TGCU\n\tG-ATTACA\n"""
 
 
 def test_needleman_comparison_equal():
@@ -248,11 +248,11 @@ def test_needleman_comparison_equal():
     """
     seq1 = "GCATGCU"
     seq2 = "GATTACA"
-    needle1 = minineedle.NeedlemanWunsch(seq1, seq2)
-    needle1.change_matrix(minineedle.ScoreMatrix(1, -1, -1))
+    needle1 = needle.NeedlemanWunsch(seq1, seq2)
+    needle1.change_matrix(core.ScoreMatrix(1, -1, -1))
     needle1.align()
-    needle2 = minineedle.NeedlemanWunsch(seq1, seq2)
-    needle2.change_matrix(minineedle.ScoreMatrix(1, -1, -1))
+    needle2 = needle.NeedlemanWunsch(seq1, seq2)
+    needle2.change_matrix(core.ScoreMatrix(1, -1, -1))
     needle2.align()
     assert needle1 == needle2
 
@@ -264,11 +264,11 @@ def test_needleman_comparison_lower():
     seq1 = "GCATGCU"
     seq2 = "GATTACA"
     seq3 = "LLLLLLL"
-    needle1 = minineedle.NeedlemanWunsch(seq1, seq2)
-    needle1.change_matrix(minineedle.ScoreMatrix(1, -1, -1))
+    needle1 = needle.NeedlemanWunsch(seq1, seq2)
+    needle1.change_matrix(core.ScoreMatrix(1, -1, -1))
     needle1.align()
-    needle2 = minineedle.NeedlemanWunsch(seq1, seq3)
-    needle2.change_matrix(minineedle.ScoreMatrix(1, -1, -1))
+    needle2 = needle.NeedlemanWunsch(seq1, seq3)
+    needle2.change_matrix(core.ScoreMatrix(1, -1, -1))
     needle2.align()
     assert needle1 > needle2
 
@@ -276,9 +276,9 @@ def test_needleman_comparison_lower():
 def test_needleman_get_aligned_sequences_list():
     seq1 = "GCATGCU"
     seq2 = "GATTACA"
-    needle = minineedle.NeedlemanWunsch(seq1, seq2)
-    needle.align()
-    seq_a, seq_b = needle.get_aligned_sequences()
+    needle_alignment = needle.NeedlemanWunsch(seq1, seq2)
+    needle_alignment.align()
+    seq_a, seq_b = needle_alignment.get_aligned_sequences()
     assert isinstance(seq_a, list)
     assert isinstance(seq_b, list)
 
@@ -286,9 +286,9 @@ def test_needleman_get_aligned_sequences_list():
 def test_needleman_get_aligned_sequences_string():
     seq1 = "GCATGCU"
     seq2 = "GATTACA"
-    needle = minineedle.NeedlemanWunsch(seq1, seq2)
-    needle.align()
-    seq_a, seq_b = needle.get_aligned_sequences("str")
+    needle_alignment = needle.NeedlemanWunsch(seq1, seq2)
+    needle_alignment.align()
+    seq_a, seq_b = needle_alignment.get_aligned_sequences("str")
     assert isinstance(seq_a, str)
     assert isinstance(seq_b, str)
 
@@ -296,10 +296,10 @@ def test_needleman_get_aligned_sequences_string():
 def test_needleman_get_aligned_sequences_wrong():
     seq1 = "GCATGCU"
     seq2 = "GATTACA"
-    needle = minineedle.NeedlemanWunsch(seq1, seq2)
-    needle.align()
+    needle_alignment = needle.NeedlemanWunsch(seq1, seq2)
+    needle_alignment.align()
     try:
-        seq_a, seq_b = needle.get_aligned_sequences("wrong")
+        seq_a, seq_b = needle_alignment.get_aligned_sequences("wrong")
         assert 0 == 1
     except ValueError:
         assert 1 == 1
@@ -313,9 +313,9 @@ def test_smith_dynamic_matrix():
     """
     seq1 = "TGTTACGG"
     seq2 = "GGTTGACTA"
-    smith = minineedle.SmithWaterman(seq1, seq2)
-    smith.change_matrix(minineedle.ScoreMatrix(3, -3, -2))
-    smith.align()
+    smith_alignment = smith.SmithWaterman(seq1, seq2)
+    smith_alignment.change_matrix(core.ScoreMatrix(3, -3, -2))
+    smith_alignment.align()
     expected_matrix = [
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 3, 1, 0, 0, 0, 3, 3],
@@ -328,7 +328,7 @@ def test_smith_dynamic_matrix():
         [0, 3, 1, 5, 4, 6, 11, 10, 8],
         [0, 1, 0, 3, 2, 7, 9, 8, 7],
     ]
-    assert smith._nmatrix == expected_matrix
+    assert smith_alignment._nmatrix == expected_matrix
 
 
 def test_smith_alignment():
@@ -337,18 +337,18 @@ def test_smith_alignment():
     """
     seq1 = "TGTTACGG"
     seq2 = "GGTTGACTA"
-    smith = minineedle.SmithWaterman(seq1, seq2)
-    smith.change_matrix(minineedle.ScoreMatrix(3, -3, -2))
-    smith.align()
-    assert smith.get_aligned_sequences()[0] == [
+    smith_alignment = smith.SmithWaterman(seq1, seq2)
+    smith_alignment.change_matrix(core.ScoreMatrix(3, -3, -2))
+    smith_alignment.align()
+    assert smith_alignment.get_aligned_sequences()[0] == [
         "G",
         "T",
         "T",
-        minineedle.Gap(),
+        core.Gap(),
         "A",
         "C",
     ]
-    assert smith.get_aligned_sequences()[1] == ["G", "T", "T", "G", "A", "C"]
+    assert smith_alignment.get_aligned_sequences()[1] == ["G", "T", "T", "G", "A", "C"]
 
 
 def test_smith_alignment_score():
@@ -357,17 +357,17 @@ def test_smith_alignment_score():
     """
     seq1 = "TGTTACGG"
     seq2 = "GGTTGACTA"
-    smith = minineedle.SmithWaterman(seq1, seq2)
-    smith.change_matrix(minineedle.ScoreMatrix(3, -3, -2))
-    smith.align()
-    assert smith.get_score() == 13
+    smith_alignment = smith.SmithWaterman(seq1, seq2)
+    smith_alignment.change_matrix(core.ScoreMatrix(3, -3, -2))
+    smith_alignment.align()
+    assert smith_alignment.get_score() == 13
 
 
 def test_gap_char_change():
     """
     Checks change of Gap character
     """
-    gap = minineedle.Gap()
+    gap = core.Gap()
     gap.character = "imagap"
     assert str(gap) == "imagap"
 
@@ -375,48 +375,48 @@ def test_gap_char_change():
 def test_gap_change_alignment():
     seq1 = "TGTTACGG"
     seq2 = "GGTTGACTA"
-    needle = minineedle.NeedlemanWunsch(seq1, seq2)
-    needle.change_matrix(minineedle.ScoreMatrix(3, -3, -2))
-    needle.align()
-    needle.gap_character = "-gap-"
-    seq1, _ = needle.get_aligned_sequences(sequence_format="str")
+    needle_alignment = needle.NeedlemanWunsch(seq1, seq2)
+    needle_alignment.change_matrix(core.ScoreMatrix(3, -3, -2))
+    needle_alignment.align()
+    needle_alignment.gap_character = "-gap-"
+    seq1, _ = needle_alignment.get_aligned_sequences(sequence_format="str")
     assert seq1 == "TGTT-gap-ACGG"
 
 
 def test_gap_change_alignment_before():
     seq1 = "TGTTACGG"
     seq2 = "GGTTGACTA"
-    needle = minineedle.NeedlemanWunsch(seq1, seq2)
-    needle.change_matrix(minineedle.ScoreMatrix(3, -3, -2))
-    needle.gap_character = "-gap-"
-    needle.align()
-    seq1, _ = needle.get_aligned_sequences(sequence_format="str")
+    needle_alignment = needle.NeedlemanWunsch(seq1, seq2)
+    needle_alignment.change_matrix(core.ScoreMatrix(3, -3, -2))
+    needle_alignment.gap_character = "-gap-"
+    needle_alignment.align()
+    seq1, _ = needle_alignment.get_aligned_sequences(sequence_format="str")
     assert seq1 == "TGTT-gap-ACGG"
 
 
 def test_strange_alignment():
     seq1 = "TG--TA--CTA"
     seq2 = "GG--TGA--CTA"
-    needle = minineedle.NeedlemanWunsch(seq1, seq2)
-    needle.change_matrix(minineedle.ScoreMatrix(2, -2, -3))
-    needle.align()
-    needle.gap_character = "+"
-    assert needle.get_aligned_sequences("str")[0] == "TG--T+A--CTA"
+    needle_alignment = needle.NeedlemanWunsch(seq1, seq2)
+    needle_alignment.change_matrix(core.ScoreMatrix(2, -2, -3))
+    needle_alignment.align()
+    needle_alignment.gap_character = "+"
+    assert needle_alignment.get_aligned_sequences("str")[0] == "TG--T+A--CTA"
 
 
 def test_get_gap_character():
     seq1 = "TGTTACGG"
     seq2 = "GGTTGACTA"
-    alignment = minineedle.NeedlemanWunsch(seq1, seq2)
+    alignment = needle.NeedlemanWunsch(seq1, seq2)
     assert alignment.gap_character == "-"
 
 
 def test_gap_equal():
-    g1 = minineedle.Gap()
-    g2 = minineedle.Gap()
+    g1 = core.Gap()
+    g2 = core.Gap()
     assert g1 == g2
 
 
 def test_gap_char():
-    gap = minineedle.Gap("a")
+    gap = core.Gap("a")
     assert str(gap) == "a"
