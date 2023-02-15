@@ -1,6 +1,6 @@
 ![Build Status](https://github.com/scastlara/minineedle/actions/workflows/python-app.yml/badge.svg) [![PyPI version](https://badge.fury.io/py/minineedle.svg)](https://badge.fury.io/py/minineedle)
 
-<img width="250" src="https://github.com/scastlara/minineedle/blob/master/minineedle/logo.png"/>
+<img width="250" src="https://github.com/scastlara/minineedle/blob/master/assets/logo.png"/>
 
 Needleman-Wunsch and Smith-Waterman algorithms in python for any iterable objects.
 
