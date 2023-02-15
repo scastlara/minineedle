@@ -1,6 +1,8 @@
-import sys
+from typing import Optional, Sequence, TypeVar
 
 from .core import OptimalAlignment
+
+T = TypeVar("T")
 
 
 class SmithWaterman(OptimalAlignment):
@@ -8,10 +10,10 @@ class SmithWaterman(OptimalAlignment):
     Smith-Waterman algorithm
     """
 
-    def __init__(self, seq1, seq2):
+    def __init__(self, seq1: Sequence[T], seq2: Sequence[T]) -> None:
         super(SmithWaterman, self).__init__(seq1, seq2)
 
-    def _add_gap_penalties(self):
+    def _add_gap_penalties(self) -> None:
         """
         Fills number matrix first row and first column with the gap penalties.
         """
@@ -21,7 +23,7 @@ class SmithWaterman(OptimalAlignment):
         for j in range(1, len(self.seq2) + 1):
             self._nmatrix[j][0] = 0
 
-    def _get_last_cell_position(self):
+    def _get_last_cell_position(self) -> tuple[int, int]:
         """
         Returns the cell row and column of the last cell in the matrix in which
         the alignment ends. For Needleman-Wunsch this will be the last cell of the matrix,
@@ -38,9 +40,9 @@ class SmithWaterman(OptimalAlignment):
                     max_score = score
         return imax, jmax
 
-    def _check_best_score(self, diagscore, topscore, leftscore, irow, jcol):
-        best_pointer = str()
-        best_score = int()
+    def _check_best_score(self, diagscore: int, topscore: int, leftscore: int, irow: int, jcol: int) -> None:
+        best_pointer: Optional[str] = ""
+        best_score = 0
 
         if diagscore >= topscore:
             if diagscore >= leftscore:
@@ -59,4 +61,3 @@ class SmithWaterman(OptimalAlignment):
 
         self._pmatrix[irow + 1][jcol + 1] = best_pointer
         self._nmatrix[irow + 1][jcol + 1] = best_score
-        return

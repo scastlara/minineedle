@@ -1,4 +1,46 @@
+
+[tool.poetry]
+name = "minineedle"
+version = "3.0.1"
+description = "Needleman-Wunsch and Smith-Waterman algorithms in python for any iterable objects."
+authors = ["S. Castillo-Lara <sergiocastillo@ub.edu>"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/scastlara/minineedle"
+repository = "https://github.com/scastlara/minineedle"
+
+[tool.poetry.dependencies]
+python = ">=3.9"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "*"
+black = "*"
+mypy = "*"
+ruff = "*"
+
 [tool.black]
 line-length = 120
-target_version = ["py38"]
+target_version = ["py311"]
 
+[tool.ruff]
+target-version = "py310"
+line-length = 120
+select = [
+    "C9",  # mccabe
+    "E",   # pycodestyle error
+    "W",   # pycodestyle warning
+    "F",   # pyflakes
+    "B",   # bugbear
+    "I",   # isort
+    "C4",  # comprehensions
+    "SIM", # simplify
+    "N",   # pep8-naming
+]
+ignore = [
+    "E501",   # line length (black handles it)
+]
+src = ["typpel", "tests"]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

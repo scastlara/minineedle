@@ -1,12 +1,26 @@
-from typing import Any, Iterable
+from __future__ import annotations
+
+from typing import Any, Optional, Sequence, TypeVar
+
+T = TypeVar("T")
+
+
+class ScoreMatrix:
+    def __init__(self, match: int, miss: int, gap: int) -> None:
+        self.match = match
+        self.miss = miss
+        self.gap = gap
+
+    def __str__(self) -> str:
+        return f"Match:{self.match} Missmatch:{self.miss} Gap:{self.gap}"
 
 
 class OptimalAlignment:
-    def __init__(self, seq1: Iterable, seq2: Iterable):
+    def __init__(self, seq1: Sequence[T], seq2: Sequence[T]) -> None:
         self.seq1 = seq1
         self.seq2 = seq2
-        self._alseq1: list[Any] = []
-        self._alseq2: list[Any] = []
+        self._alseq1: list[T | Gap] = []
+        self._alseq2: list[T | Gap] = []
         self.smatrix = ScoreMatrix(match=1, miss=-1, gap=-1)
         self._score = int()
         self._identity = float()
@@ -17,21 +31,7 @@ class OptimalAlignment:
         self._is_iterable(self.seq1)
         self._is_iterable(self.seq2)
 
-    @property
-    def gap_character(self):
-        return self._gap_character
-
-    @gap_character.setter
-    def gap_character(self, var: str):
-        self._gap_character = var
-        if self._alseq1:
-            self._alseq1 = self._change_gap_char(self._alseq1)
-            self._alseq2 = self._change_gap_char(self._alseq2)
-
-    def _is_iterable(self, iterable):
-        iter(iterable)
-
-    def __str__(self):
+    def __str__(self) -> str:
         if not self._alseq1:
             self.align()
         return "Alignment of {} and {}:\n\t{}\n\t{}\n".format(
@@ -41,18 +41,38 @@ class OptimalAlignment:
             "".join([str(x) for x in self._alseq2]),
         )
 
-    def __lt__(self, other):
+    def __lt__(self, other: Any) -> bool:
+        if not isinstance(other, OptimalAlignment):
+            raise ValueError(f"{other} must be instance of {self.__class__.__name__}")
+
         return self.get_score() < other.get_score()
 
-    def __eq__(self, other):
+    def __eq__(self, other: Any) -> bool:
+        if not isinstance(other, OptimalAlignment):
+            raise ValueError(f"{other} must be instance of {self.__class__.__name__}")
+
         return self.get_score() == other.get_score()
 
-    def get_score(self):
+    @property
+    def gap_character(self) -> str:
+        return self._gap_character
+
+    @gap_character.setter
+    def gap_character(self, var: str) -> None:
+        self._gap_character = var
+        if self._alseq1:
+            self._alseq1 = self._change_gap_char(self._alseq1)
+            self._alseq2 = self._change_gap_char(self._alseq2)
+
+    def _is_iterable(self, iterable: Sequence[T]) -> None:
+        iter(iterable)
+
+    def get_score(self) -> int | float:
         if not self._alseq1:
             self.align()
         return self._score
 
-    def change_matrix(self, newmatrix):
+    def change_matrix(self, newmatrix: ScoreMatrix) -> None:
         """
         Changes ScoreMatrix
 
@@ -64,7 +84,7 @@ class OptimalAlignment:
         else:
             raise ValueError("New matrix should be a ScoreMatrix object.")
 
-    def align(self):
+    def align(self) -> None:
         """
         Performs a Needleman-Wunsch or Smith-Waterman alignment with the given sequences and the
         corresponding ScoreMatrix.
@@ -77,7 +97,7 @@ class OptimalAlignment:
         self._get_alignment_score(imax, jmax)
         self._trace_back_alignment(imax, jmax)
 
-    def get_almatrix(self):
+    def get_almatrix(self) -> list[list[int]]:
         """
         Returns the alignment matrix (list of lists)
         """
@@ -85,7 +105,7 @@ class OptimalAlignment:
             self.align()
         return self._nmatrix
 
-    def get_identity(self):
+    def get_identity(self) -> float:
         """
         Returns the % of identity of the alignment
         """
@@ -93,21 +113,22 @@ class OptimalAlignment:
             self.align()
         return round(self._identity, 2)  # Two decimal points
 
-    def get_aligned_sequences(self, sequence_format="list"):
+    def get_aligned_sequences(
+        self, sequence_format: str = "list"
+    ) -> tuple[Sequence[T | Gap] | Sequence[str], Sequence[T | Gap] | Sequence[str]]:
         """
         Returns tuple with both aligned sequences as lists or as strings.
         """
         if sequence_format == "list":
-            seq_a = self._change_gap_char(self._alseq1)
-            seq_b = self._change_gap_char(self._alseq2)
+            return self._change_gap_char(self._alseq1), self._change_gap_char(self._alseq2)
         elif sequence_format == "string" or sequence_format == "str":
-            seq_a = "".join([str(x) for x in self._change_gap_char(self._alseq1)])
-            seq_b = "".join([str(x) for x in self._change_gap_char(self._alseq2)])
+            return "".join([str(x) for x in self._change_gap_char(self._alseq1)]), "".join(
+                [str(x) for x in self._change_gap_char(self._alseq2)]
+            )
         else:
             raise ValueError("Sequence_format has to be either 'list' or 'str'!")
-        return seq_a, seq_b
 
-    def _change_gap_char(self, iterable):
+    def _change_gap_char(self, iterable: Sequence[T]) -> list[T]:
         new_sequence = []
         for it in iterable:
             if isinstance(it, Gap):
@@ -115,7 +136,7 @@ class OptimalAlignment:
             new_sequence.append(it)
         return new_sequence
 
-    def _add_initial_pointers(self):
+    def _add_initial_pointers(self) -> None:
         """
         Fills the pointers matrix first row with "left" pointer and
         the initial column with "up" pointers.
@@ -128,20 +149,20 @@ class OptimalAlignment:
 
         self._pmatrix[0][0] = None
 
-    def _add_gap_penalties(self):
+    def _add_gap_penalties(self) -> None:
         """
         Fills number matrix first row and first column with the gap penalties.
         Will change depending if using NeedlemanWunsch or SmithWaterman.
         """
         raise NotImplementedError("NeedlemanWunsch or SmithWaterman should be used instead!")
 
-    def _get_alignment_score(self, imax, jmax):
+    def _get_alignment_score(self, imax: int, jmax: int) -> None:
         """
         Stores the alignment score value in the _score attribute.
         """
         self._score = self._nmatrix[imax][jmax]
 
-    def _get_last_cell_position(self):
+    def _get_last_cell_position(self) -> tuple[int, int]:
         """
         Returns the cell row and column of the last cell in the matrix in which
         the alignment ends. For Needleman-Wunsch this will be the last cell of the matrix,
@@ -149,19 +170,19 @@ class OptimalAlignment:
         """
         raise NotImplementedError("NeedlemanWunsch or SmithWaterman should be used instead!")
 
-    def _initialize_number_matrix(self):
+    def _initialize_number_matrix(self) -> list[list[int]]:
         """
         Initializes the matrix where the computed scores are stored.
         """
         return [[0 for x in range(len(self.seq1) + 1)] for x in range(len(self.seq2) + 1)]
 
-    def _initialize_pointers_matrix(self):
+    def _initialize_pointers_matrix(self) -> list[list[Optional[str]]]:
         """
         Initializes the matrix where the "up", "down", "diag" pointers are stored.
         """
         return [[None for x in range(len(self.seq1) + 1)] for x in range(len(self.seq2) + 1)]
 
-    def _fill_matrices(self):
+    def _fill_matrices(self) -> None:
         for irow in range(0, len(self.seq2)):
             for jcol in range(0, len(self.seq1)):
                 # Scores
@@ -175,34 +196,30 @@ class OptimalAlignment:
 
                 self._check_best_score(diagscore, topscore, leftscore, irow, jcol)
 
-    def _trace_back_alignment(self, irow, jcol):
-        alseq1 = list()
-        alseq2 = list()
-
+    def _trace_back_alignment(self, irow: int, jcol: int) -> None:
         while True:
             if self._pmatrix[irow][jcol] == "diag":
-                alseq1.append(self.seq1[jcol - 1])
-                alseq2.append(self.seq2[irow - 1])
+                self._alseq1.append(self.seq1[jcol - 1])
+                self._alseq2.append(self.seq2[irow - 1])
                 if self.seq1[jcol - 1] == self.seq2[irow - 1]:
                     self._identity += 1
                 irow -= 1
                 jcol -= 1
             elif self._pmatrix[irow][jcol] == "up":
-                alseq1.append(Gap(self._gap_character))
-                alseq2.append(self.seq2[irow - 1])
+                self._alseq1.append(Gap(self._gap_character))
+                self._alseq2.append(self.seq2[irow - 1])
                 irow -= 1
             elif self._pmatrix[irow][jcol] == "left":
-                alseq1.append(self.seq1[jcol - 1])
-                alseq2.append(Gap(self._gap_character))
+                self._alseq1.append(self.seq1[jcol - 1])
+                self._alseq2.append(Gap(self._gap_character))
                 jcol -= 1
             else:
                 break
-        self._alseq1 = list(reversed(alseq1))
-        self._alseq2 = list(reversed(alseq2))
+        self._alseq1 = list(reversed(self._alseq1))
+        self._alseq2 = list(reversed(self._alseq2))
         self._identity = (self._identity / len(self._alseq1)) * 100
-        return
 
-    def _check_best_score(self, diagscore, topscore, leftscore, irow, jcol):
+    def _check_best_score(self, diagscore: int, topscore: int, leftscore: int, irow: int, jcol: int) -> None:
         """
         Decides best score for a given cell. Will change depending if using
         Needleman-Wunsch or Smith-Waterman
@@ -210,29 +227,12 @@ class OptimalAlignment:
         raise NotImplementedError
 
 
-class ScoreMatrix(object):
-    def __init__(self, match: int, miss: int, gap: int):
-        self.match = match
-        self.miss = miss
-        self.gap = gap
-
-        try:
-            assert isinstance(self.match, int) is True
-            assert isinstance(self.miss, int) is True
-            assert isinstance(self.gap, int) is True
-        except AssertionError:
-            raise ValueError("match, miss, and gap should be integers.")
-
-    def __str__(self):
-        return f"Match:{self.match} Missmatch:{self.miss} Gap:{self.gap}"
-
-
 class Gap(object):
-    def __init__(self, character: str = "-"):
+    def __init__(self, character: str = "-") -> None:
         self.character = character
 
-    def __str__(self):
+    def __str__(self) -> str:
         return str(self.character)
 
-    def __eq__(self, other):
+    def __eq__(self, other: Any) -> bool:
         return isinstance(other, Gap)
