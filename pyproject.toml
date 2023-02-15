@@ -4,7 +4,7 @@ name = "minineedle"
 version = "3.0.1"
 description = "Needleman-Wunsch and Smith-Waterman algorithms in python for any iterable objects."
 authors = ["S. Castillo-Lara <sergiocastillo@ub.edu>"]
-license = "MIT"
+license = "GPL3"
 readme = "README.md"
 homepage = "https://github.com/scastlara/minineedle"
 repository = "https://github.com/scastlara/minineedle"
@@ -14,6 +14,7 @@ python = ">=3.9"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "*"
+pytest-cov = "*"
 black = "*"
 mypy = "*"
 ruff = "*"
@@ -39,7 +40,31 @@ select = [
 ignore = [
     "E501",   # line length (black handles it)
 ]
-src = ["typpel", "tests"]
+
+src = ["minineedle", "tests"]
+
+[tool.pytest.ini_options]
+addopts = """
+    -s
+    --cov
+    --cov-report term-missing
+    --cov-report=xml:./tests/coverage.xml
+    --junitxml=./tests/junit.xml
+"""
+
+[tool.coverage.run]
+omit = [
+    "tests/*",
+]
+
+[tool.coverage.report]
+fail_under = 90
+exclude_lines = ["if TYPE_CHECKING:", "pragma: no cover"]
+
+
+[tool.mypy]
+strict=true
+
 
 [build-system]
 requires = ["poetry-core"]

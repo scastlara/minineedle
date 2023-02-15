@@ -13,7 +13,7 @@ venv: $(VENV_TEST)
 lint: venv
 	$(VENV)/bin/black --diff --check minineedle tests
 	$(VENV)/bin/ruff check minineedle tests
-	$(VENV)/bin/mypy --strict minineedle tests
+	$(VENV)/bin/mypy minineedle tests
 
 unit-tests: venv
 	$(VENV)/bin/pytest
