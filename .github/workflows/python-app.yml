@@ -1,6 +1,5 @@
-name: Python application
-
-on:
+name: Python package
+on: 
   push:
     branches: [ master ]
   pull_request:
@@ -8,21 +7,27 @@ on:
 
 jobs:
   build:
-
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.9, 3.11]
+        runs-on: [macos-latest, ubuntu-latest]
+    runs-on: ${{ matrix.runs-on }}
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.9
-      uses: actions/setup-python@v2
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
       with:
-        python-version: 3.9
+        python-version: ${{ matrix.python-version }}
     - name: Install test dependencies
       run: |
-        make venv
+        pip install poetry
+        PYTHON=python${{ matrix.python-version }} make venv
     - name: Lint
       run: |
-        make lint
+        pip install poetry
+        PYTHON=python${{ matrix.python-version }} make lint
     - name: Test with pytest
       run: |
-        make unittests
+        pip install poetry
+        PYTHON=python${{ matrix.python-version }} make unit-tests

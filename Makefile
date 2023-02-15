@@ -1,25 +1,25 @@
-PYTHON=python3.9
+PYTHON?=python3.11
 VENV_TEST=venv/venv_test
+VENV=.venv
 
+export PYTHONPATH=minineedle
 
-$(VENV_TEST): requirements/testing.txt
-	$(PYTHON) -m venv venv
-	venv/bin/pip install -r requirements/testing.txt
-	touch $@
+$(VENV_TEST):
+	POETRY_VIRTUALENVS_IN_PROJECT=1 poetry env use $(PYTHON)
+	poetry install
 
 venv: $(VENV_TEST)
 
 lint: venv
-	venv/bin/isort --diff --check minineedle tests
-	venv/bin/black --diff --check minineedle tests
-	venv/bin/mypy minineedle
+	$(VENV)/bin/black --diff --check minineedle tests
+	$(VENV)/bin/ruff check minineedle tests
+	$(VENV)/bin/mypy --strict minineedle tests
 
-unittests: venv
-	venv/bin/pytest
+unit-tests: venv
+	$(VENV)/bin/pytest
 
 format:
-	venv/bin/isort minineedle tests
-	venv/bin/black minineedle tests
+	$(VENV)/bin/ruff minineedle tests --fix
+	$(VENV)/bin/black minineedle tests
 
-test: lint unittests
-
+test: lint unit-tests
