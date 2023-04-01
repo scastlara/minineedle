@@ -1,3 +1,9 @@
+## v3.1.4 (2023-04-01)
+
+### Fix
+
+- fix automatic release permission
+
 ## v3.1.3 (2023-04-01)
 
 ### Fix
