@@ -21,3 +21,8 @@ jobs:
       with:
         pypi_token: ${{ secrets.PYPI_TOKEN }}
         ignore_dev_requirements: "yes"
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      with:
+        generate_release_notes: true
+        token: "${{ secrets.GITHUB_TOKEN }}"
