@@ -1,6 +1,7 @@
 ![Build Status](https://github.com/scastlara/minineedle/actions/workflows/python-app.yml/badge.svg)
-![Code style](https://img.shields.io/badge/code%20style-black-000000.svg)
+![PyPI version](https://img.shields.io/pypi/v/minineedle)
 [![Python Version](https://img.shields.io/pypi/pyversions/minineedle?logo=python&logoColor=yellow)](https://pypi.org/project/minineedle/)
+![Code style](https://img.shields.io/badge/code%20style-black-000000.svg)
 [![License](https://img.shields.io/github/license/scastlara/minineedle)](LICENSE)
 
 
@@ -41,9 +42,9 @@ seq1, seq2 = fasta[0], fasta[1]
 # seq1, seq2 = ["A","C","T","G"], ["A","T","C","T","G"]
 
 # Create the instance
-alignment = needle.NeedlemanWunsch(seq1, seq2)
+alignment: needle.NeedlemanWunsch[str] = needle.NeedlemanWunsch(seq1, seq2)
 # or
-# alignment = smith.SmithWaterman(seq1, seq2)
+# alignment smith.SmithWaterman[str] = smith.SmithWaterman(seq1, seq2)
 
 # Make the alignment
 alignment.align()
@@ -52,10 +53,10 @@ alignment.align()
 alignment.get_score()
 
 # Get the sequences aligned as lists
-al1, al2 = alignment.get_aligned_sequences("list")
+al1, al2 = alignment.get_aligned_sequences(core.AlignmentFormat.list) # or "list"
 
 # Get the sequences as strings
-al1, al2 = alignment.get_aligned_sequences("str")
+al1, al2 = alignment.get_aligned_sequences(core.AlignmentFormat.str) # or "str
 
 # Change the matrix and run again
 alignment.change_matrix(core.ScoreMatrix(match=4, miss=-4, gap=-2))

@@ -1,16 +1,15 @@
-from typing import Sequence, TypeVar
+from typing import Sequence
 
-from .core import OptimalAlignment
+from minineedle.core import OptimalAlignment
+from minineedle.typesvars import ItemToAlign
 
-T = TypeVar("T")
 
-
-class NeedlemanWunsch(OptimalAlignment):
+class NeedlemanWunsch(OptimalAlignment[ItemToAlign]):
     """
     Needleman Wunsch Alignment object. Takes two sequence objects (seq1 and seq2) and aligns them with the method align.
     """
 
-    def __init__(self, seq1: Sequence[T], seq2: Sequence[T]) -> None:
+    def __init__(self, seq1: Sequence[ItemToAlign], seq2: Sequence[ItemToAlign]) -> None:
         super().__init__(seq1, seq2)
 
     def _add_gap_penalties(self) -> None:
