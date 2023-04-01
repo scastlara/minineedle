@@ -1,3 +1,9 @@
+## v3.1.2 (2023-04-01)
+
+### Fix
+
+- run tests on published version and add automatic release
+
 ## v3.1.1 (2023-04-01)
 
 ### Fix
