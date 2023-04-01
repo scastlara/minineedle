@@ -3,10 +3,13 @@ changelog:
     - title: 💥 Breaking changes
       labels:
         - breaking-change
-    - title: ⚡️Improvements
+    - title: ⚡️ Improvements
       labels:
         - enhancement
         - documentation
+    - title: 👨‍🔧 Fixes
+      labels:
+        - bugs
     - title: 🎨 Other changes
       labels:
         - "*"

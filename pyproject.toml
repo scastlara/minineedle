@@ -65,6 +65,10 @@ exclude_lines = ["if TYPE_CHECKING:", "pragma: no cover"]
 [tool.mypy]
 strict=true
 
+[tool.commitizen]
+version = "3.0.2"
+version_files = ["pyproject.toml:version"]
+tag_format = "v$version"
 
 [build-system]
 requires = ["poetry-core"]
