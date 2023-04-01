@@ -1,6 +1,6 @@
 ![Build Status](https://github.com/scastlara/minineedle/actions/workflows/python-app.yml/badge.svg)
 ![Code style](https://img.shields.io/badge/code%20style-black-000000.svg)
-[![Python Version](https://img.shields.io/pypi/pyversions/combadge?logo=python&logoColor=yellow)](https://pypi.org/project/minineedle/)
+[![Python Version](https://img.shields.io/pypi/pyversions/minineedle?logo=python&logoColor=yellow)](https://pypi.org/project/minineedle/)
 [![License](https://img.shields.io/github/license/scastlara/minineedle)](LICENSE)
 
 
