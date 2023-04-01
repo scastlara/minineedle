@@ -79,7 +79,6 @@ for align in sorted([first_al, second_al], reverse=True):
 ```
 
 
-
 ## Install
 ```bash
 pip install minineedle
