@@ -6,7 +6,7 @@
 build/
 *.swp
 *.egg-info/
-.coverage.xml
+coverage.xml
 junit.xml
 
 # Virtualenv

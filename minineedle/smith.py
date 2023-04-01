@@ -1,17 +1,16 @@
-from typing import Optional, Sequence, TypeVar
+from typing import Optional, Sequence
 
-from .core import OptimalAlignment
+from minineedle.core import OptimalAlignment
+from minineedle.typesvars import ItemToAlign
 
-T = TypeVar("T")
 
-
-class SmithWaterman(OptimalAlignment):
+class SmithWaterman(OptimalAlignment[ItemToAlign]):
     """
     Smith-Waterman algorithm
     """
 
-    def __init__(self, seq1: Sequence[T], seq2: Sequence[T]) -> None:
-        super(SmithWaterman, self).__init__(seq1, seq2)
+    def __init__(self, seq1: Sequence[ItemToAlign], seq2: Sequence[ItemToAlign]) -> None:
+        super().__init__(seq1, seq2)
 
     def _add_gap_penalties(self) -> None:
         """

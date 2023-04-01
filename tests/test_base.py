@@ -1,5 +1,6 @@
 import pytest
 from minineedle import core, needle, smith
+from typing_extensions import assert_type
 
 
 def test_iterable_true() -> None:
@@ -8,7 +9,8 @@ def test_iterable_true() -> None:
     """
     seq1 = "ACTG"
     seq2 = "ACTG"
-    needle.NeedlemanWunsch(seq1, seq2)
+    alignment = needle.NeedlemanWunsch(seq1, seq2)
+    assert_type(alignment, needle.NeedlemanWunsch[str])
 
 
 def test_iterable_true_list() -> None:
@@ -17,7 +19,8 @@ def test_iterable_true_list() -> None:
     """
     seq1 = ["A", "C", "T", "G"]
     seq2 = ["A", "C", "T", "G"]
-    needle.NeedlemanWunsch(seq1, seq2)
+    alignment = needle.NeedlemanWunsch(seq1, seq2)
+    assert_type(alignment, needle.NeedlemanWunsch[str])
 
 
 def test_iterable_different() -> None:
@@ -26,7 +29,8 @@ def test_iterable_different() -> None:
     """
     seq1 = ["A", "C", "T", "G"]
     seq2 = "ACTG"
-    needle.NeedlemanWunsch(seq1, seq2)
+    alignment = needle.NeedlemanWunsch(seq1, seq2)
+    assert_type(alignment, needle.NeedlemanWunsch[str])
 
 
 def test_change_matrix_true() -> None:
@@ -157,6 +161,7 @@ def test_needleman_alignment_residue_mix() -> None:
     """
     seq1 = [1, "C", "A", 2, "G", "C", "U"]
     seq2 = ["G", "A", "T", "T", "A", "C", "A"]
+    # mypy will correctly complain about this
     needle_alignment = needle.NeedlemanWunsch(seq1, seq2)
     needle_alignment.change_matrix(core.ScoreMatrix(1, -1, -1))
 
@@ -251,7 +256,7 @@ def test_needleman_get_aligned_sequences_wrong() -> None:
     needle_alignment.align()
 
     with pytest.raises(ValueError):
-        needle_alignment.get_aligned_sequences("wrong")
+        needle_alignment.get_aligned_sequences("wrong")  # type: ignore[call-overload]
 
 
 def test_smith_dynamic_matrix() -> None:

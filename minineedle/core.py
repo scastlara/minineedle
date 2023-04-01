@@ -1,8 +1,9 @@
 from __future__ import annotations
 
-from typing import Any, Optional, Sequence, TypeVar
+from enum import Enum
+from typing import Any, Generic, Literal, Optional, Sequence, overload
 
-T = TypeVar("T")
+from minineedle.typesvars import ItemToAlign
 
 
 class ScoreMatrix:
@@ -15,12 +16,17 @@ class ScoreMatrix:
         return f"Match:{self.match} Missmatch:{self.miss} Gap:{self.gap}"
 
 
-class OptimalAlignment:
-    def __init__(self, seq1: Sequence[T], seq2: Sequence[T]) -> None:
+class AlignmentFormat(str, Enum):
+    list = "list"
+    str = "str"
+
+
+class OptimalAlignment(Generic[ItemToAlign]):
+    def __init__(self, seq1: Sequence[ItemToAlign], seq2: Sequence[ItemToAlign]) -> None:
         self.seq1 = seq1
         self.seq2 = seq2
-        self._alseq1: list[T | Gap] = []
-        self._alseq2: list[T | Gap] = []
+        self._alseq1: list[ItemToAlign | Gap] = []
+        self._alseq2: list[ItemToAlign | Gap] = []
         self.smatrix = ScoreMatrix(match=1, miss=-1, gap=-1)
         self._score = int()
         self._identity = float()
@@ -64,7 +70,7 @@ class OptimalAlignment:
             self._alseq1 = self._change_gap_char(self._alseq1)
             self._alseq2 = self._change_gap_char(self._alseq2)
 
-    def _is_iterable(self, iterable: Sequence[T]) -> None:
+    def _is_iterable(self, iterable: Sequence[ItemToAlign]) -> None:
         iter(iterable)
 
     def get_score(self) -> int | float:
@@ -113,23 +119,33 @@ class OptimalAlignment:
             self.align()
         return round(self._identity, 2)  # Two decimal points
 
+    @overload
+    def get_aligned_sequences(self, sequence_format: Literal[AlignmentFormat.str] | Literal["str"]) -> tuple[str, str]:
+        ...
+
+    @overload
     def get_aligned_sequences(
-        self, sequence_format: str = "list"
-    ) -> tuple[Sequence[T | Gap] | Sequence[str], Sequence[T | Gap] | Sequence[str]]:
+        self, sequence_format: Literal[AlignmentFormat.list] | Literal["list"] = "list"
+    ) -> tuple[list[ItemToAlign | Gap], list[ItemToAlign | Gap]]:
+        ...
+
+    def get_aligned_sequences(
+        self, sequence_format: Literal["str"] | AlignmentFormat | Literal["list"] = "list"
+    ) -> tuple[str, str] | tuple[list[ItemToAlign | Gap], list[ItemToAlign | Gap]]:
         """
         Returns tuple with both aligned sequences as lists or as strings.
         """
-        if sequence_format == "list":
+        if sequence_format == AlignmentFormat.list:
             return self._change_gap_char(self._alseq1), self._change_gap_char(self._alseq2)
-        elif sequence_format == "string" or sequence_format == "str":
+        elif sequence_format == AlignmentFormat.str:
             return "".join([str(x) for x in self._change_gap_char(self._alseq1)]), "".join(
                 [str(x) for x in self._change_gap_char(self._alseq2)]
             )
         else:
             raise ValueError("Sequence_format has to be either 'list' or 'str'!")
 
-    def _change_gap_char(self, iterable: Sequence[T]) -> list[T]:
-        new_sequence = []
+    def _change_gap_char(self, iterable: list[ItemToAlign | Gap]) -> list[ItemToAlign | Gap]:
+        new_sequence: list[ItemToAlign | Gap] = []
         for it in iterable:
             if isinstance(it, Gap):
                 it.character = self._gap_character
