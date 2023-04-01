@@ -1,3 +1,9 @@
+## v3.1.5 (2023-04-01)
+
+### Fix
+
+- re-adding tests for merge requests
+
 ## v3.1.4 (2023-04-01)
 
 ### Fix
