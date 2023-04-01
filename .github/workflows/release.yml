@@ -1,0 +1,12 @@
+changelog:
+  categories:
+    - title: 💥 Breaking changes
+      labels:
+        - breaking-change
+    - title: ⚡️Improvements
+      labels:
+        - enhancement
+        - documentation
+    - title: 🎨 Other changes
+      labels:
+        - "*"

@@ -1,4 +1,8 @@
-![Build Status](https://github.com/scastlara/minineedle/actions/workflows/python-app.yml/badge.svg) [![PyPI version](https://badge.fury.io/py/minineedle.svg)](https://badge.fury.io/py/minineedle)
+![Build Status](https://github.com/scastlara/minineedle/actions/workflows/python-app.yml/badge.svg)
+![Code style](https://img.shields.io/badge/code%20style-black-000000.svg)
+[![Python Version](https://img.shields.io/pypi/pyversions/combadge?logo=python&logoColor=yellow)](https://pypi.org/project/minineedle/)
+[![License](https://img.shields.io/github/license/scastlara/minineedle)](LICENSE)
+
 
 <img width="250" src="https://github.com/scastlara/minineedle/blob/master/assets/logo.png"/>
 
