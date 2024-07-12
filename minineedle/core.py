@@ -38,8 +38,6 @@ class OptimalAlignment(Generic[ItemToAlign]):
         self._is_iterable(self.seq2)
 
     def __str__(self) -> str:
-        if not self._alseq1:
-            self.align()
         return "Alignment of {} and {}:\n\t{}\n\t{}\n".format(
             "SEQUENCE 1",
             "SEQUENCE 2",
@@ -213,6 +211,8 @@ class OptimalAlignment(Generic[ItemToAlign]):
                 self._check_best_score(diagscore, topscore, leftscore, irow, jcol)
 
     def _trace_back_alignment(self, irow: int, jcol: int) -> None:
+        self._alseq1, self._alseq2 = [], []
+        
         while True:
             if self._pmatrix[irow][jcol] == "diag":
                 self._alseq1.append(self.seq1[jcol - 1])
