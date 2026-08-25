@@ -11,6 +11,7 @@ repository = "https://github.com/scastlara/minineedle"
 
 [tool.poetry.dependencies]
 python = ">=3.9"
+typing_extensions = ">=4.7.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "*"
