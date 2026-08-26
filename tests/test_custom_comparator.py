@@ -9,7 +9,6 @@ def assert_lists_equal(list1: list, list2: list) -> None:
     assert all(map(lambda x: x[0] == x[1], zip(list1, list2)))
 
 
-
 def test_custom_comparator_is_applied():
     class Item:
         def __init__(self, wild_type: Literal["A", "C", "T", "G"], mutant: Literal["A", "C", "T", "G"]) -> None:
@@ -30,7 +29,6 @@ def test_custom_comparator_is_applied():
         @staticmethod
         def match_wild_type(left: Item, right: Item) -> bool:
             return left.wild_type == right.wild_type
-
 
     seq1 = [
         Item("A", "A"),
@@ -69,5 +67,3 @@ def test_custom_comparator_is_applied():
         [-4, -2, 0, 2, 2, 3],
     ]
     assert expected_nmatrix == custom_alignment.get_almatrix()
-
-

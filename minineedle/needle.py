@@ -9,7 +9,12 @@ class NeedlemanWunsch(OptimalAlignment[ItemToAlign]):
     Needleman Wunsch Alignment object. Takes two sequence objects (seq1 and seq2) and aligns them with the method align.
     """
 
-    def __init__(self, seq1: Sequence[ItemToAlign], seq2: Sequence[ItemToAlign], comparison_function: Callable[[ItemToAlign, ItemToAlign], bool] | None = None) -> None:
+    def __init__(
+        self,
+        seq1: Sequence[ItemToAlign],
+        seq2: Sequence[ItemToAlign],
+        comparison_function: Callable[[ItemToAlign, ItemToAlign], bool] | None = None,
+    ) -> None:
         super().__init__(seq1, seq2, comparison_function)
 
     def _add_gap_penalties(self) -> None:

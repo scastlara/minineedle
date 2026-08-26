@@ -23,7 +23,12 @@ class AlignmentFormat(str, Enum):
 
 
 class OptimalAlignment(Generic[ItemToAlign]):
-    def __init__(self, seq1: Sequence[ItemToAlign], seq2: Sequence[ItemToAlign], comparison_function: Callable[[ItemToAlign, ItemToAlign], bool] | None = None) -> None:
+    def __init__(
+        self,
+        seq1: Sequence[ItemToAlign],
+        seq2: Sequence[ItemToAlign],
+        comparison_function: Callable[[ItemToAlign, ItemToAlign], bool] | None = None,
+    ) -> None:
         self.seq1 = seq1
         self.seq2 = seq2
         self._comparison_function = comparison_function if comparison_function is not None else eq
@@ -120,14 +125,14 @@ class OptimalAlignment(Generic[ItemToAlign]):
         return round(self._identity, 2)  # Two decimal points
 
     @overload
-    def get_aligned_sequences(self, sequence_format: Literal[AlignmentFormat.str] | Literal["str"]) -> tuple[str, str]:
-        ...
+    def get_aligned_sequences(
+        self, sequence_format: Literal[AlignmentFormat.str] | Literal["str"]
+    ) -> tuple[str, str]: ...
 
     @overload
     def get_aligned_sequences(
         self, sequence_format: Literal[AlignmentFormat.list] | Literal["list"] = "list"
-    ) -> tuple[list[ItemToAlign | Gap], list[ItemToAlign | Gap]]:
-        ...
+    ) -> tuple[list[ItemToAlign | Gap], list[ItemToAlign | Gap]]: ...
 
     def get_aligned_sequences(
         self, sequence_format: Literal["str"] | AlignmentFormat | Literal["list"] = "list"
@@ -214,7 +219,7 @@ class OptimalAlignment(Generic[ItemToAlign]):
 
     def _trace_back_alignment(self, irow: int, jcol: int) -> None:
         self._alseq1, self._alseq2 = [], []
-        
+
         while True:
             if self._pmatrix[irow][jcol] == "diag":
                 self._alseq1.append(self.seq1[jcol - 1])
