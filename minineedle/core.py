@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 from enum import Enum
-from typing import Any, Generic, Literal, Optional, Sequence, overload
+from typing import Any, Generic, Literal, Optional, Sequence, overload, Callable
+from operator import eq
 
 from minineedle.typesvars import ItemToAlign
 
@@ -22,9 +23,15 @@ class AlignmentFormat(str, Enum):
 
 
 class OptimalAlignment(Generic[ItemToAlign]):
-    def __init__(self, seq1: Sequence[ItemToAlign], seq2: Sequence[ItemToAlign]) -> None:
+    def __init__(
+        self,
+        seq1: Sequence[ItemToAlign],
+        seq2: Sequence[ItemToAlign],
+        comparison_function: Callable[[ItemToAlign, ItemToAlign], bool] | None = None,
+    ) -> None:
         self.seq1 = seq1
         self.seq2 = seq2
+        self._comparison_function = comparison_function if comparison_function is not None else eq
         self._alseq1: list[ItemToAlign | Gap] = []
         self._alseq2: list[ItemToAlign | Gap] = []
         self.smatrix = ScoreMatrix(match=1, miss=-1, gap=-1)
@@ -118,14 +125,14 @@ class OptimalAlignment(Generic[ItemToAlign]):
         return round(self._identity, 2)  # Two decimal points
 
     @overload
-    def get_aligned_sequences(self, sequence_format: Literal[AlignmentFormat.str] | Literal["str"]) -> tuple[str, str]:
-        ...
+    def get_aligned_sequences(
+        self, sequence_format: Literal[AlignmentFormat.str] | Literal["str"]
+    ) -> tuple[str, str]: ...
 
     @overload
     def get_aligned_sequences(
         self, sequence_format: Literal[AlignmentFormat.list] | Literal["list"] = "list"
-    ) -> tuple[list[ItemToAlign | Gap], list[ItemToAlign | Gap]]:
-        ...
+    ) -> tuple[list[ItemToAlign | Gap], list[ItemToAlign | Gap]]: ...
 
     def get_aligned_sequences(
         self, sequence_format: Literal["str"] | AlignmentFormat | Literal["list"] = "list"
@@ -203,7 +210,7 @@ class OptimalAlignment(Generic[ItemToAlign]):
                 topscore = self._nmatrix[irow][jcol + 1] + self.smatrix.gap
                 leftscore = self._nmatrix[irow + 1][jcol] + self.smatrix.gap
                 diagscore = self._nmatrix[irow][jcol]
-                if self.seq1[jcol] == self.seq2[irow]:
+                if self._comparison_function(self.seq1[jcol], self.seq2[irow]):
                     diagscore += self.smatrix.match
                 else:
                     diagscore += self.smatrix.miss
@@ -212,12 +219,12 @@ class OptimalAlignment(Generic[ItemToAlign]):
 
     def _trace_back_alignment(self, irow: int, jcol: int) -> None:
         self._alseq1, self._alseq2 = [], []
-        
+
         while True:
             if self._pmatrix[irow][jcol] == "diag":
                 self._alseq1.append(self.seq1[jcol - 1])
                 self._alseq2.append(self.seq2[irow - 1])
-                if self.seq1[jcol - 1] == self.seq2[irow - 1]:
+                if self._comparison_function(self.seq1[jcol - 1], self.seq2[irow - 1]):
                     self._identity += 1
                 irow -= 1
                 jcol -= 1
