@@ -1,4 +1,4 @@
-from typing import Optional, Sequence
+from typing import Callable, Optional, Sequence
 
 from minineedle.core import OptimalAlignment
 from minineedle.typesvars import ItemToAlign

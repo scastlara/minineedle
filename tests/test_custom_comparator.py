@@ -1,15 +1,14 @@
-from typing import Any, Literal, assert_type
+from typing import Any, Literal
 
 from minineedle import needle
-from minineedle.core import Gap
 
 
-def assert_lists_equal(list1: list, list2: list) -> None:
+def assert_lists_equal(list1: list[Any], list2: list[Any]) -> None:
     assert len(list1) == len(list2)
-    assert all(map(lambda x: x[0] == x[1], zip(list1, list2)))
+    assert all((x[0] == x[1] for x in zip(list1, list2, strict=False)))
 
 
-def test_custom_comparator_is_applied():
+def test_custom_comparator_is_applied() -> None:
     class Item:
         def __init__(self, wild_type: Literal["A", "C", "T", "G"], mutant: Literal["A", "C", "T", "G"]) -> None:
             self.wild_type = wild_type
@@ -27,7 +26,7 @@ def test_custom_comparator_is_applied():
                 return False
 
         @staticmethod
-        def match_wild_type(left: Item, right: Item) -> bool:
+        def match_wild_type(left: "Item", right: "Item") -> bool:
             return left.wild_type == right.wild_type
 
     seq1 = [

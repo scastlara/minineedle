@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 from enum import Enum
-from typing import Any, Generic, Literal, Optional, Sequence, overload, Callable
 from operator import eq
+from typing import Any, Callable, Generic, Literal, Optional, Sequence, overload
 
 from minineedle.typesvars import ItemToAlign
 
