@@ -1,4 +1,4 @@
-from typing import Callable, Sequence
+from typing import Callable, Optional, Sequence
 
 from minineedle.core import OptimalAlignment
 from minineedle.typesvars import ItemToAlign
@@ -13,7 +13,7 @@ class NeedlemanWunsch(OptimalAlignment[ItemToAlign]):
         self,
         seq1: Sequence[ItemToAlign],
         seq2: Sequence[ItemToAlign],
-        comparison_function: Callable[[ItemToAlign, ItemToAlign], bool] | None = None,
+        comparison_function: Optional[Callable[[ItemToAlign, ItemToAlign], bool]] = None,
     ) -> None:
         super().__init__(seq1, seq2, comparison_function)
 

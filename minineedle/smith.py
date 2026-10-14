@@ -13,7 +13,7 @@ class SmithWaterman(OptimalAlignment[ItemToAlign]):
         self,
         seq1: Sequence[ItemToAlign],
         seq2: Sequence[ItemToAlign],
-        comparison_function: Callable[[ItemToAlign, ItemToAlign], bool] | None = None,
+        comparison_function: Optional[Callable[[ItemToAlign, ItemToAlign], bool]] = None,
     ) -> None:
         super().__init__(seq1, seq2, comparison_function)
 
