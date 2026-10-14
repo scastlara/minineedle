@@ -1,4 +1,4 @@
-from typing import Optional, Sequence
+from typing import Callable, Optional, Sequence
 
 from minineedle.core import OptimalAlignment
 from minineedle.typesvars import ItemToAlign
@@ -9,8 +9,13 @@ class SmithWaterman(OptimalAlignment[ItemToAlign]):
     Smith-Waterman algorithm
     """
 
-    def __init__(self, seq1: Sequence[ItemToAlign], seq2: Sequence[ItemToAlign]) -> None:
-        super().__init__(seq1, seq2)
+    def __init__(
+        self,
+        seq1: Sequence[ItemToAlign],
+        seq2: Sequence[ItemToAlign],
+        comparison_function: Optional[Callable[[ItemToAlign, ItemToAlign], bool]] = None,
+    ) -> None:
+        super().__init__(seq1, seq2, comparison_function)
 
     def _add_gap_penalties(self) -> None:
         """
