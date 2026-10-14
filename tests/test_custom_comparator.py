@@ -3,11 +3,6 @@ from typing import Any, Literal
 from minineedle import needle
 
 
-def assert_lists_equal(list1: list[Any], list2: list[Any]) -> None:
-    assert len(list1) == len(list2)
-    assert all((x[0] == x[1] for x in zip(list1, list2, strict=False)))
-
-
 def test_custom_comparator_is_applied() -> None:
     class Item:
         def __init__(self, wild_type: Literal["A", "C", "T", "G"], mutant: Literal["A", "C", "T", "G"]) -> None:
